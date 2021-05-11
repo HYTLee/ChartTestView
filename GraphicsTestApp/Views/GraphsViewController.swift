@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         decodedData = jsonDecoder.decodeJson()
-        chartData = jsonDecoder.convertDataToChartModel(chartData: (decodedData?[1])!)
+        chartData = jsonDecoder.convertDataToChartModel(chartData: (decodedData?[0])!)
         self.setTestGraph()
     }
     

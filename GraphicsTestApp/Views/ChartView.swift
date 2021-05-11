@@ -50,7 +50,7 @@ class ChartView: UIView {
         var xPointsForXLabels:[CGFloat] = []
         let numberOfXLabels = Int(widthOfChart / 120)
         var xPoint: CGFloat = 60
-        for label in 1...numberOfXLabels {
+        for _ in 1...numberOfXLabels {
             xPointsForXLabels.append(xPoint)
             xPoint += 120
         }
@@ -66,6 +66,33 @@ class ChartView: UIView {
         chartPath.lineWidth = 0.5
         chartPath.stroke()
         
+        //Draw chart lines
+        let linePath = UIBezierPath()
+        guard let numberOfChartLines = graphData?.y?.count else { return }
+        let numberOfYPoints = (graphData?.y?[0].count ?? 2) - 1
+        let xSpaicing = rect.width / CGFloat(numberOfYPoints)
+        let ySpaicing = getYSpacing(rect: rect)
+        
+        for line in 0...(numberOfChartLines - 1) {
+            let yPoints = graphData?.y?[line]
+            var xPointer: CGFloat = 0
+            let minimalY = getMinimalYValue()
+            guard let initialY = yPoints?[0] else { return }
+            let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpaicing)
+            linePath.move(to: CGPoint(x: xPointer, y: initialYCGPoint))
+            let numberOfYPoints = (yPoints?.count ?? 2) - 1
+            for yPoint in 1...numberOfYPoints {
+                xPointer += xSpaicing
+                guard let currentY = yPoints?[yPoint] else { return }
+                let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpaicing)
+                linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
+                let color = hexStringToUIColor(hex: graphData?.color?[line] ?? "#d3d3d3")
+                color.set()
+                linePath.lineWidth = 2
+                linePath.stroke()
+            }
+         }
+        linePath.close()
     }
     
     private func addYLabel(point: CGPoint, value: String) {
@@ -97,7 +124,6 @@ class ChartView: UIView {
         let maximalY = allYValues.max() ?? 1
         let rangeOfYValues = maximalY - minimalY
         
-        print(rangeOfYValues)
         yValues.append(String(minimalY))
         let percent20 = Double(rangeOfYValues) * 0.2
         yValues.append(String(Int(percent20)))
@@ -121,5 +147,59 @@ class ChartView: UIView {
             xValues.append(date)
         }
         return xValues
+    }
+    
+    private func getYSpacing(rect: CGRect) -> CGFloat {
+        var allYValues: [Int] = []
+        
+        let numberOfLines = (graphData?.y?.count ?? 1) - 1
+        for y in 0...numberOfLines {
+            let numberOfYPoints = (graphData?.y?[y].count ?? 1) - 1
+            for yPoint in 0...numberOfYPoints {
+                allYValues.append(graphData?.y?[y][yPoint] ?? 0)
+            }
+        }
+        let minimalY = allYValues.min() ?? 0
+        let maximalY = allYValues.max() ?? 1
+        let rangeOfYValues = maximalY - minimalY
+        
+        let ySpacing = (rect.height - 25) / CGFloat(rangeOfYValues)
+        return ySpacing
+    }
+    
+    private func getMinimalYValue() -> Int {
+        var allYValues: [Int] = []
+        
+        let numberOfLines = (graphData?.y?.count ?? 1) - 1
+        for y in 0...numberOfLines {
+            let numberOfYPoints = (graphData?.y?[y].count ?? 1) - 1
+            for yPoint in 0...numberOfYPoints {
+                allYValues.append(graphData?.y?[y][yPoint] ?? 0)
+            }
+        }
+        let minimalY = allYValues.min() ?? 0
+        return minimalY
+    }
+    
+    func hexStringToUIColor(hex:String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
     }
 }
