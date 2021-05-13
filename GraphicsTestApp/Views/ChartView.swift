@@ -32,7 +32,8 @@ class ChartView: UIView {
         let chartPath = UIBezierPath()
         let heightOfChart = rect.height - 25
         let widthOfChart = rect.width
-        let yValuesForLines = setValuesForYRows()
+        let ySpacing = getYSpacing(heightOfChart: heightOfChart)
+        let minimalY = getMinimalYValue()
         
         // Draw x lines of chart
         var widthOfLine: CGFloat = 0
@@ -40,10 +41,11 @@ class ChartView: UIView {
         while widthOfLine <= heightOfChart {
             chartPath.move(to: CGPoint(x:0, y:widthOfLine))
             if numberOfLine != 0 {
-                addYLabel(point:  chartPath.currentPoint, value: yValuesForLines[numberOfLine - 1])
+                let yValue = setValueForYRow(currentPoint: chartPath.currentPoint, heightOfGraph: heightOfChart, rect: rect, ySpacing: ySpacing)
+                addYLabel(point:  chartPath.currentPoint, value: yValue)
             }
             chartPath.addLine(to: CGPoint(x: rect.width, y: widthOfLine))
-            widthOfLine = widthOfLine + heightOfChart / 5 - 1
+            widthOfLine = widthOfLine + heightOfChart / 5
             numberOfLine += 1
         }
         let yPointForXLabels = chartPath.currentPoint.y
@@ -67,32 +69,30 @@ class ChartView: UIView {
         chartPath.stroke()
         
         //Draw chart lines
-        let linePath = UIBezierPath()
         guard let numberOfChartLines = graphData?.y?.count else { return }
         let numberOfYPoints = (graphData?.y?[0].count ?? 2) - 1
         let xSpaicing = rect.width / CGFloat(numberOfYPoints)
-        let ySpaicing = getYSpacing(rect: rect)
         
         for line in 0...(numberOfChartLines - 1) {
+            let linePath = UIBezierPath()
             let yPoints = graphData?.y?[line]
             var xPointer: CGFloat = 0
-            let minimalY = getMinimalYValue()
             guard let initialY = yPoints?[0] else { return }
-            let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpaicing)
+            let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
             linePath.move(to: CGPoint(x: xPointer, y: initialYCGPoint))
             let numberOfYPoints = (yPoints?.count ?? 2) - 1
             for yPoint in 1...numberOfYPoints {
                 xPointer += xSpaicing
                 guard let currentY = yPoints?[yPoint] else { return }
-                let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpaicing)
+                let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
                 linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
                 let color = hexStringToUIColor(hex: graphData?.color?[line] ?? "#d3d3d3")
                 color.set()
                 linePath.lineWidth = 2
                 linePath.stroke()
             }
+            linePath.close()
          }
-        linePath.close()
     }
     
     private func addYLabel(point: CGPoint, value: String) {
@@ -109,8 +109,7 @@ class ChartView: UIView {
         xLabel.text = value
     }
     
-    private func setValuesForYRows() -> [String] {
-        var yValues: [String] = []
+    private func setValueForYRow(currentPoint: CGPoint, heightOfGraph: CGFloat, rect: CGRect, ySpacing: CGFloat) -> String {
         var allYValues: [Int] = []
         
         let numberOfLines = (graphData?.y?.count ?? 1) - 1
@@ -122,19 +121,15 @@ class ChartView: UIView {
         }
         let minimalY = allYValues.min() ?? 0
         let maximalY = allYValues.max() ?? 1
-        let rangeOfYValues = maximalY - minimalY
-        
-        yValues.append(String(minimalY))
-        let percent20 = Double(rangeOfYValues) * 0.2
-        yValues.append(String(Int(percent20)))
-        let percent40 = Double(rangeOfYValues) * 0.4
-        yValues.append(String(Int(percent40)))
-        let percent60 = Double(rangeOfYValues) * 0.6
-        yValues.append(String(Int(percent60)))
-        let percent80 = Double(rangeOfYValues) * 0.8
-        yValues.append(String(Int(percent80)))
-        yValues.reverse()
-        return yValues
+        let rangeY = maximalY - minimalY
+        print("heightOfGraph \(heightOfGraph)")
+        print("currentY \(currentPoint.y)")
+        print("range \(rangeY)")
+        print("maximalY \(maximalY)")
+        print("minimalY \(minimalY)")
+        let yValue = ((heightOfGraph - currentPoint.y) / ySpacing) + CGFloat(minimalY)
+        let yValueString = "\(Int(yValue))"
+        return yValueString
     }
     
     private func setValuesForXRows(numberOfLabels: Int) -> [String] {
@@ -149,7 +144,7 @@ class ChartView: UIView {
         return xValues
     }
     
-    private func getYSpacing(rect: CGRect) -> CGFloat {
+    private func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
         var allYValues: [Int] = []
         
         let numberOfLines = (graphData?.y?.count ?? 1) - 1
@@ -163,7 +158,7 @@ class ChartView: UIView {
         let maximalY = allYValues.max() ?? 1
         let rangeOfYValues = maximalY - minimalY
         
-        let ySpacing = (rect.height - 25) / CGFloat(rangeOfYValues)
+        let ySpacing = heightOfChart / CGFloat(rangeOfYValues)
         return ySpacing
     }
     
@@ -183,18 +178,14 @@ class ChartView: UIView {
     
     func hexStringToUIColor(hex:String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-
         if (cString.hasPrefix("#")) {
             cString.remove(at: cString.startIndex)
         }
-
         if ((cString.count) != 6) {
             return UIColor.gray
         }
-
         var rgbValue:UInt64 = 0
         Scanner(string: cString).scanHexInt64(&rgbValue)
-
         return UIColor(
             red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
             green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
