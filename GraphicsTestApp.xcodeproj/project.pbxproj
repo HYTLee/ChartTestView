@@ -22,6 +22,7 @@
 		8021ECB226445B620061C7FF /* Column.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECB126445B620061C7FF /* Column.swift */; };
 		8021ECB926445CD60061C7FF /* JsonDecodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECB826445CD60061C7FF /* JsonDecodeManager.swift */; };
 		8021ECC426445F0A0061C7FF /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECC326445F0A0061C7FF /* ChartView.swift */; };
+		80662055264D43C500947B3E /* UIColor+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80662054264D43C500947B3E /* UIColor+Extention.swift */; };
 		80B6D3D32646EAD300152F7E /* ChartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D22646EAD300152F7E /* ChartModel.swift */; };
 		80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */; };
 /* End PBXBuildFile section */
@@ -65,6 +66,7 @@
 		8021ECB126445B620061C7FF /* Column.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Column.swift; sourceTree = "<group>"; };
 		8021ECB826445CD60061C7FF /* JsonDecodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecodeManager.swift; sourceTree = "<group>"; };
 		8021ECC326445F0A0061C7FF /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		80662054264D43C500947B3E /* UIColor+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extention.swift"; sourceTree = "<group>"; };
 		80B6D3D22646EAD300152F7E /* ChartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartModel.swift; sourceTree = "<group>"; };
 		80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extention.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,6 +187,22 @@
 			path = CodingManager;
 			sourceTree = "<group>";
 		};
+		80662052264D43A600947B3E /* Foundations */ = {
+			isa = PBXGroup;
+			children = (
+				80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */,
+			);
+			path = Foundations;
+			sourceTree = "<group>";
+		};
+		80662053264D43B000947B3E /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				80662054264D43C500947B3E /* UIColor+Extention.swift */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
 		80B6D3D02646EA6E00152F7E /* RawModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -206,7 +224,8 @@
 		80B6D3D726484A7500152F7E /* Extentions */ = {
 			isa = PBXGroup;
 			children = (
-				80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */,
+				80662053264D43B000947B3E /* UIKit */,
+				80662052264D43A600947B3E /* Foundations */,
 			);
 			path = Extentions;
 			sourceTree = "<group>";
@@ -342,6 +361,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80662055264D43C500947B3E /* UIColor+Extention.swift in Sources */,
 				8021ECAD26445B230061C7FF /* Settings.swift in Sources */,
 				8021EC662641BC140061C7FF /* GraphsViewController.swift in Sources */,
 				8021EC622641BC140061C7FF /* AppDelegate.swift in Sources */,

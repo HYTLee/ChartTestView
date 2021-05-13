@@ -18,7 +18,6 @@ class ChartView: UIView {
            self.graphData = graphData
              }
        
-       // initWithFrame to init view from code
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
@@ -36,16 +35,16 @@ class ChartView: UIView {
         let minimalY = getMinimalYValue()
         
         // Draw x lines of chart
-        var widthOfLine: CGFloat = 0
+        var currentYLinePoint: CGFloat = 0
         var numberOfLine = 0
-        while widthOfLine <= heightOfChart {
-            chartPath.move(to: CGPoint(x:0, y:widthOfLine))
+        while currentYLinePoint <= heightOfChart {
+            chartPath.move(to: CGPoint(x:0, y:currentYLinePoint))
             if numberOfLine != 0 {
                 let yValue = setValueForYRow(currentPoint: chartPath.currentPoint, heightOfGraph: heightOfChart, rect: rect, ySpacing: ySpacing)
-                addYLabel(point:  chartPath.currentPoint, value: yValue)
+                addYLabel(point: chartPath.currentPoint, value: yValue)
             }
-            chartPath.addLine(to: CGPoint(x: rect.width, y: widthOfLine))
-            widthOfLine = widthOfLine + heightOfChart / 5
+            chartPath.addLine(to: CGPoint(x: rect.width, y: currentYLinePoint))
+            currentYLinePoint = currentYLinePoint + heightOfChart / 5
             numberOfLine += 1
         }
         let yPointForXLabels = chartPath.currentPoint.y
@@ -65,7 +64,7 @@ class ChartView: UIView {
         }
         chartPath.close()
         UIColor.lightGray.set()
-        chartPath.lineWidth = 0.5
+        chartPath.lineWidth = 1
         chartPath.stroke()
         
         //Draw chart lines
@@ -86,7 +85,7 @@ class ChartView: UIView {
                 guard let currentY = yPoints?[yPoint] else { return }
                 let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
                 linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
-                let color = hexStringToUIColor(hex: graphData?.color?[line] ?? "#d3d3d3")
+                let color = UIColor().hexStringToUIColor(hex: graphData?.color?[line] ?? "#d3d3d3")
                 color.set()
                 linePath.lineWidth = 2
                 linePath.stroke()
@@ -120,13 +119,6 @@ class ChartView: UIView {
             }
         }
         let minimalY = allYValues.min() ?? 0
-        let maximalY = allYValues.max() ?? 1
-        let rangeY = maximalY - minimalY
-        print("heightOfGraph \(heightOfGraph)")
-        print("currentY \(currentPoint.y)")
-        print("range \(rangeY)")
-        print("maximalY \(maximalY)")
-        print("minimalY \(minimalY)")
         let yValue = ((heightOfGraph - currentPoint.y) / ySpacing) + CGFloat(minimalY)
         let yValueString = "\(Int(yValue))"
         return yValueString
@@ -157,7 +149,6 @@ class ChartView: UIView {
         let minimalY = allYValues.min() ?? 0
         let maximalY = allYValues.max() ?? 1
         let rangeOfYValues = maximalY - minimalY
-        
         let ySpacing = heightOfChart / CGFloat(rangeOfYValues)
         return ySpacing
     }
@@ -174,23 +165,5 @@ class ChartView: UIView {
         }
         let minimalY = allYValues.min() ?? 0
         return minimalY
-    }
-    
-    func hexStringToUIColor(hex:String) -> UIColor {
-        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        if (cString.hasPrefix("#")) {
-            cString.remove(at: cString.startIndex)
-        }
-        if ((cString.count) != 6) {
-            return UIColor.gray
-        }
-        var rgbValue:UInt64 = 0
-        Scanner(string: cString).scanHexInt64(&rgbValue)
-        return UIColor(
-            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
-        )
     }
 }
