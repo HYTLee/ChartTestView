@@ -9,25 +9,25 @@ import Foundation
 import UIKit
 import CoreGraphics
 
-class ChartView: UIView {
+public class ChartView: UIView {
     var graphData: ChartModel?
     var yValues: [String]?
     
-    convenience init(graphData: ChartModel) {
-           self.init(frame: CGRect.zero)
-           self.graphData = graphData
-             }
+    public convenience init(graphData: ChartModel) {
+        self.init(frame: CGRect.zero)
+        self.graphData = graphData
+    }
        
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
-       }
+    }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func draw(_ rect: CGRect) {
+    public override func draw(_ rect: CGRect) {
         let chartPath = UIBezierPath()
         let heightOfChart = rect.height - 25
         let widthOfChart = rect.width

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ChartModel {
+public struct ChartModel {
     var x: [Date]?
     var y: [[Int]]?
     var name: [String]?

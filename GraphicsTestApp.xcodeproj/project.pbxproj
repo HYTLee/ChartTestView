@@ -119,16 +119,9 @@
 		8021EC602641BC140061C7FF /* GraphicsTestApp */ = {
 			isa = PBXGroup;
 			children = (
-				80B6D3D726484A7500152F7E /* Extentions */,
-				8021ECB726445C1A0061C7FF /* CodingManager */,
-				8021ECB626445BC70061C7FF /* Views */,
+				80B6D3D726484A7500152F7E /* Source */,
+				8021ECB626445BC70061C7FF /* Example */,
 				8021ECA02641BEBE0061C7FF /* Resources */,
-				8021EC972641BC2E0061C7FF /* Models */,
-				8021EC612641BC140061C7FF /* AppDelegate.swift */,
-				8021ECA12641BED60061C7FF /* chartData.json */,
-				8021EC632641BC140061C7FF /* SceneDelegate.swift */,
-				8021EC672641BC140061C7FF /* Main.storyboard */,
-				8021EC6F2641BC150061C7FF /* LaunchScreen.storyboard */,
 				8021EC722641BC150061C7FF /* Info.plist */,
 				8021EC6A2641BC140061C7FF /* GraphicsTestApp.xcdatamodeld */,
 			);
@@ -165,18 +158,22 @@
 		8021ECA02641BEBE0061C7FF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8021ECA12641BED60061C7FF /* chartData.json */,
 				8021EC6D2641BC150061C7FF /* Assets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		8021ECB626445BC70061C7FF /* Views */ = {
+		8021ECB626445BC70061C7FF /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				8021EC6F2641BC150061C7FF /* LaunchScreen.storyboard */,
+				8021EC672641BC140061C7FF /* Main.storyboard */,
+				8021EC632641BC140061C7FF /* SceneDelegate.swift */,
+				8021EC612641BC140061C7FF /* AppDelegate.swift */,
 				8021EC652641BC140061C7FF /* GraphsViewController.swift */,
-				8021ECC326445F0A0061C7FF /* ChartView.swift */,
 			);
-			path = Views;
+			path = Example;
 			sourceTree = "<group>";
 		};
 		8021ECB726445C1A0061C7FF /* CodingManager */ = {
@@ -198,6 +195,7 @@
 		80662053264D43B000947B3E /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				8021ECC326445F0A0061C7FF /* ChartView.swift */,
 				80662054264D43C500947B3E /* UIColor+Extention.swift */,
 			);
 			path = UIKit;
@@ -221,13 +219,15 @@
 			path = FinalModel;
 			sourceTree = "<group>";
 		};
-		80B6D3D726484A7500152F7E /* Extentions */ = {
+		80B6D3D726484A7500152F7E /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				8021EC972641BC2E0061C7FF /* Models */,
+				8021ECB726445C1A0061C7FF /* CodingManager */,
 				80662053264D43B000947B3E /* UIKit */,
 				80662052264D43A600947B3E /* Foundations */,
 			);
-			path = Extentions;
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
