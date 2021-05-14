@@ -166,4 +166,10 @@ public class ChartView: UIView {
         let minimalY = allYValues.min() ?? 0
         return minimalY
     }
+    
+    func removeAllSubview()  {
+        for view in self.subviews{
+            view.removeFromSuperview()
+        }
+    }
 }
