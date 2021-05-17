@@ -21,9 +21,9 @@
 		8021ECAD26445B230061C7FF /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECAC26445B230061C7FF /* Settings.swift */; };
 		8021ECB226445B620061C7FF /* Column.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECB126445B620061C7FF /* Column.swift */; };
 		8021ECB926445CD60061C7FF /* JsonDecodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECB826445CD60061C7FF /* JsonDecodeManager.swift */; };
-		8021ECC426445F0A0061C7FF /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECC326445F0A0061C7FF /* ChartView.swift */; };
+		8021ECC426445F0A0061C7FF /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECC326445F0A0061C7FF /* GraphView.swift */; };
 		80662055264D43C500947B3E /* UIColor+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80662054264D43C500947B3E /* UIColor+Extention.swift */; };
-		80B6D3D32646EAD300152F7E /* ChartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D22646EAD300152F7E /* ChartModel.swift */; };
+		80B6D3D32646EAD300152F7E /* GraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D22646EAD300152F7E /* GraphModel.swift */; };
 		80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,9 +65,9 @@
 		8021ECAC26445B230061C7FF /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		8021ECB126445B620061C7FF /* Column.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Column.swift; sourceTree = "<group>"; };
 		8021ECB826445CD60061C7FF /* JsonDecodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecodeManager.swift; sourceTree = "<group>"; };
-		8021ECC326445F0A0061C7FF /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		8021ECC326445F0A0061C7FF /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		80662054264D43C500947B3E /* UIColor+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extention.swift"; sourceTree = "<group>"; };
-		80B6D3D22646EAD300152F7E /* ChartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartModel.swift; sourceTree = "<group>"; };
+		80B6D3D22646EAD300152F7E /* GraphModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphModel.swift; sourceTree = "<group>"; };
 		80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extention.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,7 +121,6 @@
 			children = (
 				80B6D3D726484A7500152F7E /* Source */,
 				8021ECB626445BC70061C7FF /* Example */,
-				8021ECA02641BEBE0061C7FF /* Resources */,
 				8021EC722641BC150061C7FF /* Info.plist */,
 				8021EC6A2641BC140061C7FF /* GraphicsTestApp.xcdatamodeld */,
 			);
@@ -149,8 +148,7 @@
 		8021EC972641BC2E0061C7FF /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				80B6D3D12646EA8100152F7E /* FinalModel */,
-				80B6D3D02646EA6E00152F7E /* RawModel */,
+				80B6D3D12646EA8100152F7E /* GraphModel */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -167,6 +165,10 @@
 		8021ECB626445BC70061C7FF /* Example */ = {
 			isa = PBXGroup;
 			children = (
+				80E4BD7D2652A61500AD7CBC /* Extentions */,
+				8021ECB726445C1A0061C7FF /* CodingManager */,
+				80B6D3D02646EA6E00152F7E /* TestData */,
+				8021ECA02641BEBE0061C7FF /* Resources */,
 				8021EC6F2641BC150061C7FF /* LaunchScreen.storyboard */,
 				8021EC672641BC140061C7FF /* Main.storyboard */,
 				8021EC632641BC140061C7FF /* SceneDelegate.swift */,
@@ -195,39 +197,45 @@
 		80662053264D43B000947B3E /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				8021ECC326445F0A0061C7FF /* ChartView.swift */,
+				8021ECC326445F0A0061C7FF /* GraphView.swift */,
 				80662054264D43C500947B3E /* UIColor+Extention.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
 		};
-		80B6D3D02646EA6E00152F7E /* RawModel */ = {
+		80B6D3D02646EA6E00152F7E /* TestData */ = {
 			isa = PBXGroup;
 			children = (
 				8021ECB126445B620061C7FF /* Column.swift */,
 				8021ECAC26445B230061C7FF /* Settings.swift */,
 				8021EC982641BC3C0061C7FF /* Response.swift */,
 			);
-			path = RawModel;
+			path = TestData;
 			sourceTree = "<group>";
 		};
-		80B6D3D12646EA8100152F7E /* FinalModel */ = {
+		80B6D3D12646EA8100152F7E /* GraphModel */ = {
 			isa = PBXGroup;
 			children = (
-				80B6D3D22646EAD300152F7E /* ChartModel.swift */,
+				80B6D3D22646EAD300152F7E /* GraphModel.swift */,
 			);
-			path = FinalModel;
+			path = GraphModel;
 			sourceTree = "<group>";
 		};
 		80B6D3D726484A7500152F7E /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				8021EC972641BC2E0061C7FF /* Models */,
-				8021ECB726445C1A0061C7FF /* CodingManager */,
 				80662053264D43B000947B3E /* UIKit */,
-				80662052264D43A600947B3E /* Foundations */,
 			);
 			path = Source;
+			sourceTree = "<group>";
+		};
+		80E4BD7D2652A61500AD7CBC /* Extentions */ = {
+			isa = PBXGroup;
+			children = (
+				80662052264D43A600947B3E /* Foundations */,
+			);
+			path = Extentions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -366,10 +374,10 @@
 				8021EC662641BC140061C7FF /* GraphsViewController.swift in Sources */,
 				8021EC622641BC140061C7FF /* AppDelegate.swift in Sources */,
 				8021ECB926445CD60061C7FF /* JsonDecodeManager.swift in Sources */,
-				80B6D3D32646EAD300152F7E /* ChartModel.swift in Sources */,
+				80B6D3D32646EAD300152F7E /* GraphModel.swift in Sources */,
 				8021ECB226445B620061C7FF /* Column.swift in Sources */,
 				80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */,
-				8021ECC426445F0A0061C7FF /* ChartView.swift in Sources */,
+				8021ECC426445F0A0061C7FF /* GraphView.swift in Sources */,
 				8021EC6C2641BC140061C7FF /* GraphicsTestApp.xcdatamodeld in Sources */,
 				8021EC642641BC140061C7FF /* SceneDelegate.swift in Sources */,
 				8021EC992641BC3C0061C7FF /* Response.swift in Sources */,

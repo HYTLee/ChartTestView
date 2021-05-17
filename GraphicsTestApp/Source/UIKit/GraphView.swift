@@ -9,11 +9,15 @@ import Foundation
 import UIKit
 import CoreGraphics
 
-public class ChartView: UIView {
-    var graphData: ChartModel?
+public class GraphView: UIView {
+    var graphData: GraphModel? {
+        didSet {
+            self.updateUI()
+        }
+    }
     var yValues: [String]?
     
-    public convenience init(graphData: ChartModel) {
+    public convenience init(graphData: GraphModel) {
         self.init(frame: CGRect.zero)
         self.graphData = graphData
     }
@@ -99,7 +103,12 @@ public class ChartView: UIView {
          }
     }
     
-    private func addYLabel(point: CGPoint, value: String) {
+    
+}
+
+//MARK: Private methods
+private extension GraphView {
+    func addYLabel(point: CGPoint, value: String) {
         let yLabel = UILabel(frame: CGRect(x: point.x + 5,
                                            y: point.y - 20,
                                            width: 100,
@@ -109,7 +118,7 @@ public class ChartView: UIView {
         yLabel.text = value
     }
     
-    private func addXLabel(point: CGPoint, value: String) {
+    func addXLabel(point: CGPoint, value: String) {
         let xLabel = UILabel(frame: CGRect(x: point.x,
                                            y: point.y + 5,
                                            width: 100,
@@ -119,7 +128,7 @@ public class ChartView: UIView {
         xLabel.text = value
     }
     
-    private func setValueForYRow(currentPoint: CGPoint,
+    func setValueForYRow(currentPoint: CGPoint,
                                  heightOfGraph: CGFloat,
                                  rect: CGRect,
                                  ySpacing: CGFloat) -> String {
@@ -137,19 +146,19 @@ public class ChartView: UIView {
         return yValueString
     }
     
-    private func setValuesForXRows(numberOfLabels: Int) -> [String] {
+    func setValuesForXRows(numberOfLabels: Int) -> [String] {
         var xValues: [String] = []
         
         let datePercentage = 100 / numberOfLabels
         for number in 1...numberOfLabels {
             guard let value = graphData?.x?[datePercentage * number] else { return ["Unknown"] }
-            let date =  DateFormatter().convertDateMMdd(date: value)
+            let date = DateFormatter().convertDate(date: value, dateFormat: "MMM dd")
             xValues.append(date)
         }
         return xValues
     }
     
-    private func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
+    func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
         var allYValues: [Int] = []
         
         let numberOfLines = (graphData?.y?.count ?? 1) - 1
@@ -166,7 +175,7 @@ public class ChartView: UIView {
         return ySpacing
     }
     
-    private func getMinimalYValue() -> Int {
+    func getMinimalYValue() -> Int {
         var allYValues: [Int] = []
         
         let numberOfLines = (graphData?.y?.count ?? 1) - 1
@@ -184,5 +193,10 @@ public class ChartView: UIView {
         for view in self.subviews{
             view.removeFromSuperview()
         }
+    }
+    
+    func updateUI()  {
+        self.removeAllSubview()
+        self.setNeedsDisplay()
     }
 }

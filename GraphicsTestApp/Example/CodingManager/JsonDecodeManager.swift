@@ -24,8 +24,8 @@ class JsonDecodeManager {
            return nil
     }
     
-    func convertDataToChartModel(chartData: Response) -> ChartModel {
-        var chart = ChartModel(x: [], y: [], name: [], color: [])
+    func convertDataToChartModel(chartData: Response) -> GraphModel {
+        var chart = GraphModel(x: [], y: [], name: [], color: [])
         let response = chartData
         for value in 1...response.columns[0].count - 1 {
             let date = Date(timeIntervalSince1970: TimeInterval(response.columns[0][value].getInt()))

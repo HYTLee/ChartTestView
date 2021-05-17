@@ -10,12 +10,12 @@ import UIKit
 class ViewController: UIViewController {
     let jsonDecoder = JsonDecodeManager()
     var decodedData: Responses?
-    var chartData: ChartModel? {
+    var chartData: GraphModel? {
         didSet {
             setTestGraph()
         }
     }
-    let testGraph = ChartView()
+    let testGraph = GraphView()
     let chooseGraphButton = UIButton()
     let picker = UIPickerView()
     let okButton = UIButton()
@@ -35,7 +35,6 @@ class ViewController: UIViewController {
     
     func setTestGraph()  {
         testGraph.graphData = chartData
-        self.testGraph.setNeedsDisplay()
         self.view.addSubview(testGraph)
         testGraph.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -61,7 +60,6 @@ class ViewController: UIViewController {
     }
     
     @objc private func openGraphPicker() {
-        self.testGraph.removeAllSubview()
         self.testGraph.removeFromSuperview()
         self.chooseGraphButton.isHidden = true
         self.picker.frame = CGRect(x: self.view.center.x - 100, y: self.view.center.y - 100, width: 200, height: 200)
