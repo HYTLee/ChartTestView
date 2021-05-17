@@ -7,20 +7,20 @@
 
 import Foundation
 
+//public struct GraphModel {
+//    var x: [Date]?
+//    var y: [[Int]]?
+//    var name: [String]?
+//    var color: [String]?
+//}
+
 public struct GraphModel {
-    var x: [Date]?
-    var y: [[Int]]?
-    var name: [String]?
-    var color: [String]?
+    var dataSets: [DataSet]
 }
 
-//public struct GraphModel {
-//    var dataSets: [DataSet]
-//}
-//
-//public struct DataSet {
-//    var x: [Date]
-//    var y: [Int]
-//    var name: String
-//    var color: String
-//}
+public struct DataSet {
+    var x: [Date]
+    var y: [Int]
+    var name: String
+    var color: String
+}

@@ -25,38 +25,54 @@ class JsonDecodeManager {
     }
     
     func convertDataToChartModel(chartData: Response) -> GraphModel {
-        var chart = GraphModel(x: [], y: [], name: [], color: [])
+        var dataSets: [DataSet] = []
         let response = chartData
-        for value in 1...response.columns[0].count - 1 {
-            let date = Date(timeIntervalSince1970: TimeInterval(response.columns[0][value].getInt()))
-            chart.x?.append(date)
-        }
-        let numberOfYs = response.columns.count - 1
-        for y in 1...numberOfYs {
-            var yArray: [Int] = []
-            for yElement in 1...response.columns[y].count - 1 {
-                yArray.append(response.columns[y][yElement].getInt())
+        let numberOfArraysWithDataSets = response.columns.count - 1
+        for numberOfDataSet in 1...numberOfArraysWithDataSets {
+            var dataSet = DataSet(x: [], y: [], name: "", color: "")
+            dataSet.x = setXValuesToChartData(response: chartData)
+            dataSet.y = setYValuesToChartData(response: chartData, numberOfY: numberOfDataSet)
+            switch numberOfDataSet {
+            case 1:
+                dataSet.color = response.colors.y0
+                dataSet.name = response.names.y0
+            case 2:
+                dataSet.color = response.colors.y1
+                dataSet.name = response.names.y1
+
+            case 3:
+                dataSet.color = response.colors.y2 ?? "#3DC23F"
+                dataSet.name = response.names.y2 ?? "Default"
+            case 4:
+                dataSet.color = response.colors.y3 ?? "#3DC23F"
+                dataSet.name = response.names.y3 ?? "Default"
+            default:
+                dataSet.color = response.colors.y0
+                dataSet.name = response.names.y0
             }
-            chart.y?.append(yArray)
+            dataSets.append(dataSet)
         }
-        chart.name?.append(response.names.y0)
-        chart.name?.append(response.names.y1)
-        if response.names.y2 != nil {
-            chart.name?.append(response.names.y2 ?? "nil")
-        }
-        if response.names.y3 != nil {
-            chart.name?.append(response.names.y3 ?? "nil")
-        }
-        
-        chart.color?.append(response.colors.y0)
-        chart.color?.append(response.colors.y1)
-        if response.colors.y2 != nil {
-            chart.color?.append(response.colors.y2 ?? "nil")
-        }
-        if response.colors.y3 != nil {
-            chart.color?.append(response.colors.y3 ?? "nil")
-        }
-        chart.x = chart.x?.sorted(by: { $0.compare($1) == .orderedAscending })
+        let chart = GraphModel(dataSets: dataSets)
         return chart
+    }
+    
+    private func setXValuesToChartData(response: Response) -> [Date]{
+        let numberOfXs = response.columns[0].count - 1
+        var xArray: [Date] = []
+        for x in 1...numberOfXs {
+            let date = Date(timeIntervalSince1970: TimeInterval(response.columns[0][x].getInt()))
+            xArray.append(date)
+        }
+        return xArray
+    }
+    
+    private func setYValuesToChartData(response: Response, numberOfY: Int) -> [Int]{
+        let numberOfYs = response.columns[numberOfY].count - 1
+        var yArray: [Int] = []
+        for y in 1...numberOfYs {
+            let yData = response.columns[numberOfY][y].getInt()
+            yArray.append(yData)
+        }
+        return yArray
     }
 }

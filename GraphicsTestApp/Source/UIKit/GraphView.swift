@@ -77,13 +77,13 @@ public class GraphView: UIView {
         chartPath.stroke()
         
         //Draw chart lines
-        guard let numberOfChartLines = graphData?.y?.count else { return }
-        let numberOfYPoints = (graphData?.y?[0].count ?? 2) - 1
+        guard let numberOfChartLines = graphData?.dataSets.count else { return }
+        let numberOfYPoints = (graphData?.dataSets[0].y.count ?? 2) - 1
         let xSpaicing = rect.width / CGFloat(numberOfYPoints)
         
         for line in 0...(numberOfChartLines - 1) {
             let linePath = UIBezierPath()
-            let yPoints = graphData?.y?[line]
+            let yPoints = graphData?.dataSets[line].y
             var xPointer: CGFloat = 0
             guard let initialY = yPoints?[0] else { return }
             let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
@@ -94,7 +94,7 @@ public class GraphView: UIView {
                 guard let currentY = yPoints?[yPoint] else { return }
                 let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
                 linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
-                let color = UIColor().hexStringToUIColor(hex: graphData?.color?[line] ?? "#d3d3d3")
+                let color = UIColor().hexStringToUIColor(hex: graphData?.dataSets[line].color ?? "#d3d3d3")
                 color.set()
                 linePath.lineWidth = 2
                 linePath.stroke()
@@ -133,11 +133,11 @@ private extension GraphView {
                                  rect: CGRect,
                                  ySpacing: CGFloat) -> String {
         var allYValues: [Int] = []
-        let numberOfLines = (graphData?.y?.count ?? 1) - 1
+        let numberOfLines = (graphData?.dataSets.count ?? 1) - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (graphData?.y?[y].count ?? 1) - 1
+            let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
-                allYValues.append(graphData?.y?[y][yPoint] ?? 0)
+                allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
             }
         }
         let minimalY = allYValues.min() ?? 0
@@ -151,7 +151,7 @@ private extension GraphView {
         
         let datePercentage = 100 / numberOfLabels
         for number in 1...numberOfLabels {
-            guard let value = graphData?.x?[datePercentage * number] else { return ["Unknown"] }
+            guard let value = graphData?.dataSets[0].x[datePercentage * number] else { return ["Unknown"] }
             let date = DateFormatter().convertDate(date: value, dateFormat: "MMM dd")
             xValues.append(date)
         }
@@ -161,11 +161,11 @@ private extension GraphView {
     func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
         var allYValues: [Int] = []
         
-        let numberOfLines = (graphData?.y?.count ?? 1) - 1
+        let numberOfLines = (graphData?.dataSets.count ?? 1) - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (graphData?.y?[y].count ?? 1) - 1
+            let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
-                allYValues.append(graphData?.y?[y][yPoint] ?? 0)
+                allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
             }
         }
         let minimalY = allYValues.min() ?? 0
@@ -178,11 +178,11 @@ private extension GraphView {
     func getMinimalYValue() -> Int {
         var allYValues: [Int] = []
         
-        let numberOfLines = (graphData?.y?.count ?? 1) - 1
+        let numberOfLines = (graphData?.dataSets.count ?? 1) - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (graphData?.y?[y].count ?? 1) - 1
+            let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
-                allYValues.append(graphData?.y?[y][yPoint] ?? 0)
+                allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
             }
         }
         let minimalY = allYValues.min() ?? 0
