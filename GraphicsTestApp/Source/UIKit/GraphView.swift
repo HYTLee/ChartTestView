@@ -18,6 +18,7 @@ public class GraphView: UIView {
     var graphLinesColor = UIColor.lightGray
     var textColor = UIColor.lightGray
     var linesWidth: CGFloat = 2
+    var staticLinesWidth: CGFloat = 1
     
     public convenience init(graphData: GraphModel) {
         self.init(frame: CGRect.zero)
@@ -34,60 +35,13 @@ public class GraphView: UIView {
         let numberOfXLabels = Int(widthOfChart / 120)
         
         // Draw x lines of graph
-        var currentYLinePoint: CGFloat = 0
-        var numberOfLine = 0
-        while currentYLinePoint <= heightOfChart {
-            chartPath.move(to: CGPoint(x:0,
-                                       y:currentYLinePoint))
-            if numberOfLine != 0 {
-                let yValue = setValueForYRow(currentPoint: chartPath.currentPoint,
-                                             heightOfGraph: heightOfChart,
-                                             rect: rect, ySpacing: ySpacing)
-                addYLabel(point: chartPath.currentPoint,
-                          value: yValue)
-            }
-            chartPath.addLine(to: CGPoint(x: rect.width,
-                                          y: currentYLinePoint))
-            currentYLinePoint = currentYLinePoint + heightOfChart / 5
-            numberOfLine += 1
-        }
-        let yPointForXLabels = chartPath.currentPoint.y
-        let xPointsForXLabels:[CGFloat] = setPointForXLabels(numberOfXLabels: numberOfXLabels, rangeBetweenXPoints: &rangeBetweenXPoint)
-        let xPointsStrings = setValuesForXRows(numberOfLabels: xPointsForXLabels.count)
-        var numberOFXPoint = 0
-        for point in xPointsForXLabels {
-            let coordinatesForLabel = CGPoint(x: point, y: yPointForXLabels)
-            self.addXLabel(point: coordinatesForLabel, value: xPointsStrings[numberOFXPoint])
-            numberOFXPoint += 1
-        }
+        self.drawStaticLines(chartPath: chartPath, rect: rect, heightOfChart: heightOfChart, ySpacing: ySpacing)
+        self.setXLabelsWithData(chartPath: chartPath, numberOfXLabels: numberOfXLabels, rangeBetweenXPoint: &rangeBetweenXPoint)
         chartPath.close()
         self.graphLinesColor.set()
-        chartPath.lineWidth = 1
+        chartPath.lineWidth = staticLinesWidth
         chartPath.stroke()
-        
-        //Draw graph lines
-        guard let numberOfGraphLines = graphData?.dataSets.count else { return }
-        let xSpaicing = setXSpacing(rect: rect)
-        for line in 0...(numberOfGraphLines - 1) {
-            let linePath = UIBezierPath()
-            let yPoints = graphData?.dataSets[line].y
-            var xPointer: CGFloat = 0
-            guard let initialY = yPoints?[0] else { return }
-            let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
-            linePath.move(to: CGPoint(x: xPointer, y: initialYCGPoint))
-            let numberOfYPoints = (yPoints?.count ?? 2) - 1
-            for yPoint in 1...numberOfYPoints {
-                xPointer += xSpaicing
-                guard let currentY = yPoints?[yPoint] else { return }
-                let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
-                linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
-                let color = UIColor().hexStringToUIColor(hex: graphData?.dataSets[line].color ?? "#d3d3d3")
-                color.set()
-                linePath.lineWidth = linesWidth
-                linePath.stroke()
-            }
-            linePath.close()
-         }
+        self.drawGraphicLines(rect: rect, heightOfChart: heightOfChart, minimalY: minimalY, ySpacing: ySpacing)
     }
 }
 
@@ -198,5 +152,62 @@ private extension GraphView {
             rangeBetweenXPoints += 120
         }
         return xPointsForXLabels
+    }
+    
+    func setXLabelsWithData(chartPath: UIBezierPath, numberOfXLabels: Int, rangeBetweenXPoint: inout CGFloat)  {
+        let yPointForXLabels = chartPath.currentPoint.y
+        let xPointsForXLabels:[CGFloat] = setPointForXLabels(numberOfXLabels: numberOfXLabels, rangeBetweenXPoints: &rangeBetweenXPoint)
+        let xPointsStrings = setValuesForXRows(numberOfLabels: xPointsForXLabels.count)
+        var numberOFXPoint = 0
+        for point in xPointsForXLabels {
+            let coordinatesForLabel = CGPoint(x: point, y: yPointForXLabels)
+            self.addXLabel(point: coordinatesForLabel, value: xPointsStrings[numberOFXPoint])
+            numberOFXPoint += 1
+        }
+    }
+    
+    func drawStaticLines(chartPath: UIBezierPath, rect: CGRect, heightOfChart: CGFloat, ySpacing: CGFloat)  {
+        var currentYLinePoint: CGFloat = 0
+        var numberOfLine = 0
+        while currentYLinePoint <= heightOfChart {
+            chartPath.move(to: CGPoint(x:0,
+                                       y:currentYLinePoint))
+            if numberOfLine != 0 {
+                let yValue = setValueForYRow(currentPoint: chartPath.currentPoint,
+                                             heightOfGraph: heightOfChart,
+                                             rect: rect, ySpacing: ySpacing)
+                addYLabel(point: chartPath.currentPoint,
+                          value: yValue)
+            }
+            chartPath.addLine(to: CGPoint(x: rect.width,
+                                          y: currentYLinePoint))
+            currentYLinePoint = currentYLinePoint + heightOfChart / 5
+            numberOfLine += 1
+        }
+    }
+
+    func drawGraphicLines(rect: CGRect, heightOfChart: CGFloat, minimalY: Int, ySpacing: CGFloat)  {
+        guard let numberOfGraphLines = graphData?.dataSets.count else { return }
+        let xSpaicing = setXSpacing(rect: rect)
+        for line in 0...(numberOfGraphLines - 1) {
+            let linePath = UIBezierPath()
+            let yPoints = graphData?.dataSets[line].y
+            var xPointer: CGFloat = 0
+            guard let initialY = yPoints?[0] else { return }
+            let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
+            linePath.move(to: CGPoint(x: xPointer, y: initialYCGPoint))
+            let numberOfYPoints = (yPoints?.count ?? 2) - 1
+            for yPoint in 1...numberOfYPoints {
+                xPointer += xSpaicing
+                guard let currentY = yPoints?[yPoint] else { return }
+                let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
+                linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
+                let color = UIColor().hexStringToUIColor(hex: graphData?.dataSets[line].color ?? "#d3d3d3")
+                color.set()
+                linePath.lineWidth = linesWidth
+                linePath.stroke()
+            }
+            linePath.close()
+         }
     }
 }
