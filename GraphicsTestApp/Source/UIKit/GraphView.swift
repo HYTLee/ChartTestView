@@ -19,6 +19,7 @@ public class GraphView: UIView {
     var textColor = UIColor.lightGray
     var linesWidth: CGFloat = 2
     var staticLinesWidth: CGFloat = 1
+    var isGraphLabelsVisible: Bool = true
     
     public convenience init(graphData: GraphModel) {
         self.init(frame: CGRect.zero)
@@ -36,7 +37,9 @@ public class GraphView: UIView {
         
         // Draw x lines of graph
         self.drawStaticLines(chartPath: chartPath, rect: rect, heightOfChart: heightOfChart, ySpacing: ySpacing)
-        self.setXLabelsWithData(chartPath: chartPath, numberOfXLabels: numberOfXLabels, rangeBetweenXPoint: &rangeBetweenXPoint)
+        if isGraphLabelsVisible {
+            self.setXLabelsWithData(chartPath: chartPath, numberOfXLabels: numberOfXLabels, rangeBetweenXPoint: &rangeBetweenXPoint)
+        }
         chartPath.close()
         self.graphLinesColor.set()
         chartPath.lineWidth = staticLinesWidth
@@ -172,7 +175,7 @@ private extension GraphView {
         while currentYLinePoint <= heightOfChart {
             chartPath.move(to: CGPoint(x:0,
                                        y:currentYLinePoint))
-            if numberOfLine != 0 {
+            if numberOfLine != 0 && isGraphLabelsVisible{
                 let yValue = setValueForYRow(currentPoint: chartPath.currentPoint,
                                              heightOfGraph: heightOfChart,
                                              rect: rect, ySpacing: ySpacing)
