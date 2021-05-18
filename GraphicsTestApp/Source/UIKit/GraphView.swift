@@ -15,30 +15,25 @@ public class GraphView: UIView {
             self.updateUI()
         }
     }
-    var yValues: [String]?
+    var graphLinesColor = UIColor.lightGray
+    var textColor = UIColor.lightGray
+    var linesWidth: CGFloat = 2
     
     public convenience init(graphData: GraphModel) {
         self.init(frame: CGRect.zero)
         self.graphData = graphData
     }
-       
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = .white
-    }
-    
-    public required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     public override func draw(_ rect: CGRect) {
         let chartPath = UIBezierPath()
         let heightOfChart = rect.height - 25
         let widthOfChart = rect.width
         let ySpacing = getYSpacing(heightOfChart: heightOfChart)
         let minimalY = getMinimalYValue()
+        var rangeBetweenXPoint: CGFloat = 60
+        let numberOfXLabels = Int(widthOfChart / 120)
         
-        // Draw x lines of chart
+        // Draw x lines of graph
         var currentYLinePoint: CGFloat = 0
         var numberOfLine = 0
         while currentYLinePoint <= heightOfChart {
@@ -57,31 +52,23 @@ public class GraphView: UIView {
             numberOfLine += 1
         }
         let yPointForXLabels = chartPath.currentPoint.y
-        var xPointsForXLabels:[CGFloat] = []
-        let numberOfXLabels = Int(widthOfChart / 120)
-        var xPoint: CGFloat = 60
-        for _ in 1...numberOfXLabels {
-            xPointsForXLabels.append(xPoint)
-            xPoint += 120
-        }
+        let xPointsForXLabels:[CGFloat] = setPointForXLabels(numberOfXLabels: numberOfXLabels, rangeBetweenXPoints: &rangeBetweenXPoint)
         let xPointsStrings = setValuesForXRows(numberOfLabels: xPointsForXLabels.count)
         var numberOFXPoint = 0
         for point in xPointsForXLabels {
             let coordinatesForLabel = CGPoint(x: point, y: yPointForXLabels)
-            addXLabel(point: coordinatesForLabel, value: xPointsStrings[numberOFXPoint])
+            self.addXLabel(point: coordinatesForLabel, value: xPointsStrings[numberOFXPoint])
             numberOFXPoint += 1
         }
         chartPath.close()
-        UIColor.lightGray.set()
+        self.graphLinesColor.set()
         chartPath.lineWidth = 1
         chartPath.stroke()
         
-        //Draw chart lines
-        guard let numberOfChartLines = graphData?.dataSets.count else { return }
-        let numberOfYPoints = (graphData?.dataSets[0].y.count ?? 2) - 1
-        let xSpaicing = rect.width / CGFloat(numberOfYPoints)
-        
-        for line in 0...(numberOfChartLines - 1) {
+        //Draw graph lines
+        guard let numberOfGraphLines = graphData?.dataSets.count else { return }
+        let xSpaicing = setXSpacing(rect: rect)
+        for line in 0...(numberOfGraphLines - 1) {
             let linePath = UIBezierPath()
             let yPoints = graphData?.dataSets[line].y
             var xPointer: CGFloat = 0
@@ -96,14 +83,12 @@ public class GraphView: UIView {
                 linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
                 let color = UIColor().hexStringToUIColor(hex: graphData?.dataSets[line].color ?? "#d3d3d3")
                 color.set()
-                linePath.lineWidth = 2
+                linePath.lineWidth = linesWidth
                 linePath.stroke()
             }
             linePath.close()
          }
     }
-    
-    
 }
 
 //MARK: Private methods
@@ -114,7 +99,7 @@ private extension GraphView {
                                            width: 100,
                                            height: 20))
         self.addSubview(yLabel)
-        yLabel.textColor = .lightGray
+        yLabel.textColor = textColor
         yLabel.text = value
     }
     
@@ -124,7 +109,7 @@ private extension GraphView {
                                            width: 100,
                                            height: 20))
         self.addSubview(xLabel)
-        xLabel.textColor = .lightGray
+        xLabel.textColor = textColor
         xLabel.text = value
     }
     
@@ -198,5 +183,20 @@ private extension GraphView {
     func updateUI()  {
         self.removeAllSubview()
         self.setNeedsDisplay()
+    }
+    
+    func setXSpacing(rect: CGRect) -> CGFloat {
+        let numberOfYPoints = (graphData?.dataSets[0].y.count ?? 2) - 1
+        let xSpacing = rect.width / CGFloat(numberOfYPoints)
+        return xSpacing
+    }
+    
+    func setPointForXLabels(numberOfXLabels: Int, rangeBetweenXPoints: inout CGFloat) -> [CGFloat] {
+        var xPointsForXLabels: [CGFloat] = []
+        for _ in 1...numberOfXLabels {
+            xPointsForXLabels.append(rangeBetweenXPoints)
+            rangeBetweenXPoints += 120
+        }
+        return xPointsForXLabels
     }
 }

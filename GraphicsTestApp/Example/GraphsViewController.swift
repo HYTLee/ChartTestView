@@ -15,7 +15,6 @@ class ViewController: UIViewController {
             setTestGraph()
         }
     }
-    let testGraph = GraphView()
     let chooseGraphButton = UIButton()
     let picker = UIPickerView()
     let okButton = UIButton()
@@ -29,13 +28,12 @@ class ViewController: UIViewController {
         self.picker.dataSource = self
         self.picker.delegate = self
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-    }
+
     
     func setTestGraph()  {
-        testGraph.graphData = chartData
+        let testGraph = GraphView(graphData: chartData!)
         self.view.addSubview(testGraph)
+        testGraph.backgroundColor = .white
         testGraph.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             testGraph.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200),
@@ -60,7 +58,6 @@ class ViewController: UIViewController {
     }
     
     @objc private func openGraphPicker() {
-        self.testGraph.removeFromSuperview()
         self.chooseGraphButton.isHidden = true
         self.picker.frame = CGRect(x: self.view.center.x - 100, y: self.view.center.y - 100, width: 200, height: 200)
         self.okButton.frame = CGRect(x:  self.view.center.x - 50, y: self.view.center.y + 150, width: 100, height: 50)
