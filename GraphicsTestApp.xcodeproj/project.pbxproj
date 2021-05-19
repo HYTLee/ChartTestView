@@ -23,7 +23,7 @@
 		8021ECB926445CD60061C7FF /* JsonDecodeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECB826445CD60061C7FF /* JsonDecodeManager.swift */; };
 		8021ECC426445F0A0061C7FF /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8021ECC326445F0A0061C7FF /* GraphView.swift */; };
 		80662055264D43C500947B3E /* UIColor+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80662054264D43C500947B3E /* UIColor+Extention.swift */; };
-		80B6D3D32646EAD300152F7E /* GraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D22646EAD300152F7E /* GraphModel.swift */; };
+		80B6D3D32646EAD300152F7E /* InitialGraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D22646EAD300152F7E /* InitialGraphModel.swift */; };
 		80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,7 +67,7 @@
 		8021ECB826445CD60061C7FF /* JsonDecodeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecodeManager.swift; sourceTree = "<group>"; };
 		8021ECC326445F0A0061C7FF /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		80662054264D43C500947B3E /* UIColor+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extention.swift"; sourceTree = "<group>"; };
-		80B6D3D22646EAD300152F7E /* GraphModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphModel.swift; sourceTree = "<group>"; };
+		80B6D3D22646EAD300152F7E /* InitialGraphModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialGraphModel.swift; sourceTree = "<group>"; };
 		80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extention.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -216,7 +216,7 @@
 		80B6D3D12646EA8100152F7E /* GraphModel */ = {
 			isa = PBXGroup;
 			children = (
-				80B6D3D22646EAD300152F7E /* GraphModel.swift */,
+				80B6D3D22646EAD300152F7E /* InitialGraphModel.swift */,
 			);
 			path = GraphModel;
 			sourceTree = "<group>";
@@ -374,7 +374,7 @@
 				8021EC662641BC140061C7FF /* GraphsViewController.swift in Sources */,
 				8021EC622641BC140061C7FF /* AppDelegate.swift in Sources */,
 				8021ECB926445CD60061C7FF /* JsonDecodeManager.swift in Sources */,
-				80B6D3D32646EAD300152F7E /* GraphModel.swift in Sources */,
+				80B6D3D32646EAD300152F7E /* InitialGraphModel.swift in Sources */,
 				8021ECB226445B620061C7FF /* Column.swift in Sources */,
 				80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */,
 				8021ECC426445F0A0061C7FF /* GraphView.swift in Sources */,

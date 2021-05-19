@@ -59,8 +59,8 @@ class ViewController: UIViewController {
     
     @objc private func openGraphPicker() {
         self.chooseGraphButton.isHidden = true
-        self.picker.frame = CGRect(x: self.view.center.x - 100, y: self.view.center.y - 100, width: 200, height: 200)
-        self.okButton.frame = CGRect(x:  self.view.center.x - 50, y: self.view.center.y + 150, width: 100, height: 50)
+        self.picker.frame = CGRect(x: self.view.center.x - 100, y: 0, width: 200, height: 200)
+        self.okButton.frame = CGRect(x:  self.view.center.x - 50, y: 210, width: 100, height: 50)
         self.view.addSubview(picker)
         self.view.addSubview(okButton)
         okButton.setTitle("Ok", for: .normal)

@@ -10,11 +10,12 @@ import UIKit
 import CoreGraphics
 
 public class GraphView: UIView {
-    var graphData: GraphModel? {
+    var initialGraphData: GraphModel? {
         didSet {
             self.updateUI()
         }
     }
+    var drawingGraphData: GraphModel?
     var graphLinesColor = UIColor.lightGray
     var textColor = UIColor.lightGray
     var linesWidth: CGFloat = 2
@@ -23,20 +24,22 @@ public class GraphView: UIView {
     
     public convenience init(graphData: GraphModel) {
         self.init(frame: CGRect.zero)
-        self.graphData = graphData
+        self.initialGraphData = graphData
+        self.drawingGraphData = initialGraphData
     }
 
     public override func draw(_ rect: CGRect) {
         let chartPath = UIBezierPath()
-        let heightOfChart = rect.height - 25
+        let heightOfGraph = rect.height - 75
         let widthOfChart = rect.width
-        let ySpacing = getYSpacing(heightOfChart: heightOfChart)
+        let ySpacing = getYSpacing(heightOfChart: heightOfGraph)
         let minimalY = getMinimalYValue()
         var rangeBetweenXPoint: CGFloat = 60
         let numberOfXLabels = Int(widthOfChart / 120)
+        self.addYLinesButtons(graphHeight: heightOfGraph)
         
         // Draw x lines of graph
-        self.drawStaticLines(chartPath: chartPath, rect: rect, heightOfChart: heightOfChart, ySpacing: ySpacing)
+        self.drawStaticLines(chartPath: chartPath, rect: rect, heightOfChart: heightOfGraph, ySpacing: ySpacing)
         if isGraphLabelsVisible {
             self.setXLabelsWithData(chartPath: chartPath, numberOfXLabels: numberOfXLabels, rangeBetweenXPoint: &rangeBetweenXPoint)
         }
@@ -44,7 +47,7 @@ public class GraphView: UIView {
         self.graphLinesColor.set()
         chartPath.lineWidth = staticLinesWidth
         chartPath.stroke()
-        self.drawGraphicLines(rect: rect, heightOfChart: heightOfChart, minimalY: minimalY, ySpacing: ySpacing)
+        self.drawGraphicLines(rect: rect, heightOfChart: heightOfGraph, minimalY: minimalY, ySpacing: ySpacing)
     }
 }
 
@@ -75,11 +78,11 @@ private extension GraphView {
                                  rect: CGRect,
                                  ySpacing: CGFloat) -> String {
         var allYValues: [Int] = []
-        let numberOfLines = (graphData?.dataSets.count ?? 1) - 1
+        let numberOfLines = (drawingGraphData?.dataSets.count ?? 1) - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
+            let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
-                allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
+                allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
             }
         }
         let minimalY = allYValues.min() ?? 0
@@ -93,7 +96,7 @@ private extension GraphView {
         
         let datePercentage = 100 / numberOfLabels
         for number in 1...numberOfLabels {
-            guard let value = graphData?.dataSets[0].x[datePercentage * number] else { return ["Unknown"] }
+            guard let value = drawingGraphData?.dataSets[0].x[datePercentage * number] else { return ["Unknown"] }
             let date = DateFormatter().convertDate(date: value, dateFormat: "MMM dd")
             xValues.append(date)
         }
@@ -103,11 +106,11 @@ private extension GraphView {
     func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
         var allYValues: [Int] = []
         
-        let numberOfLines = (graphData?.dataSets.count ?? 1) - 1
+        let numberOfLines = (drawingGraphData?.dataSets.count ?? 1) - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
+            let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
-                allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
+                allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
             }
         }
         let minimalY = allYValues.min() ?? 0
@@ -120,11 +123,11 @@ private extension GraphView {
     func getMinimalYValue() -> Int {
         var allYValues: [Int] = []
         
-        let numberOfLines = (graphData?.dataSets.count ?? 1) - 1
+        let numberOfLines = (drawingGraphData?.dataSets.count ?? 1) - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
+            let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
-                allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
+                allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
             }
         }
         let minimalY = allYValues.min() ?? 0
@@ -143,7 +146,7 @@ private extension GraphView {
     }
     
     func setXSpacing(rect: CGRect) -> CGFloat {
-        let numberOfYPoints = (graphData?.dataSets[0].y.count ?? 2) - 1
+        let numberOfYPoints = (drawingGraphData?.dataSets[0].y.count ?? 2) - 1
         let xSpacing = rect.width / CGFloat(numberOfYPoints)
         return xSpacing
     }
@@ -190,11 +193,11 @@ private extension GraphView {
     }
 
     func drawGraphicLines(rect: CGRect, heightOfChart: CGFloat, minimalY: Int, ySpacing: CGFloat)  {
-        guard let numberOfGraphLines = graphData?.dataSets.count else { return }
+        guard let numberOfGraphLines = drawingGraphData?.dataSets.count else { return }
         let xSpaicing = setXSpacing(rect: rect)
         for line in 0...(numberOfGraphLines - 1) {
             let linePath = UIBezierPath()
-            let yPoints = graphData?.dataSets[line].y
+            let yPoints = drawingGraphData?.dataSets[line].y
             var xPointer: CGFloat = 0
             guard let initialY = yPoints?[0] else { return }
             let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
@@ -205,12 +208,58 @@ private extension GraphView {
                 guard let currentY = yPoints?[yPoint] else { return }
                 let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
                 linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
-                let color = UIColor().hexStringToUIColor(hex: graphData?.dataSets[line].color ?? "#d3d3d3")
+                let color = UIColor().hexStringToUIColor(hex: drawingGraphData?.dataSets[line].color ?? "#d3d3d3")
                 color.set()
                 linePath.lineWidth = linesWidth
                 linePath.stroke()
             }
             linePath.close()
          }
+    }
+    
+    func addYLinesButtons(graphHeight: CGFloat)  {
+        let numberOfButtons = (initialGraphData?.dataSets.count ?? 2) - 1
+
+        for number in 0...numberOfButtons {
+            let button = UIButton(frame: CGRect(x: CGFloat(number) * 50 , y: graphHeight + 35, width: 44, height: 44))
+            
+            let lineName = initialGraphData?.dataSets[number].name
+            guard let isButtonEnabled = drawingGraphData?.dataSets.contains(where: { (dataSet) -> Bool in
+                dataSet.name == lineName
+            }) else { return  }
+            if isButtonEnabled {
+                button.setTitle("\(initialGraphData?.dataSets[number].name ?? "N/A")", for: .normal)
+            } else {
+                button.setTitle("Off", for: .normal)
+            }
+            button.setTitleColor(UIColor().hexStringToUIColor(hex: initialGraphData?.dataSets[number].color ?? "#d3d3d3"), for: .normal)
+            button.tag = number
+            button.addTarget(self, action: #selector(yLineButtonAction), for: .touchUpInside)
+            self.addSubview(button)
+        }
+    }
+    
+    @objc func yLineButtonAction(button: UIButton) {
+        if button.title(for: .normal) != "Off"{
+            if drawingGraphData?.dataSets.count ?? 1 > 1 {
+                guard let indexOfLine = drawingGraphData?.dataSets.firstIndex(where: { (dataSet) -> Bool in
+                    dataSet.name == initialGraphData?.dataSets[button.tag].name
+                }) else { return }
+                drawingGraphData?.dataSets.remove(at: indexOfLine)
+            } else {
+                self.showAlertGraphCountViolation()
+            }
+        } else {
+            button.setTitle("\(initialGraphData?.dataSets[button.tag].name ?? "N/A")", for: .normal)
+            drawingGraphData?.dataSets.append((initialGraphData?.dataSets[button.tag])!)
+        }
+        self.updateUI()
+    }
+    
+    private func showAlertGraphCountViolation() {
+        let alert = UIAlertController(title: "Error", message: "At least one graph should be presented", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        alert.addAction(okAction)
+        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
     }
 }
