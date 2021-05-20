@@ -36,8 +36,8 @@ class ViewController: UIViewController {
         testGraph.backgroundColor = .white
         testGraph.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            testGraph.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200),
-            testGraph.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 200),
+            testGraph.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
+            testGraph.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 300),
             testGraph.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 5),
             testGraph.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -5)
             ])
@@ -50,7 +50,7 @@ class ViewController: UIViewController {
         self.chooseGraphButton.setTitle("Choose graph", for: .normal)
         self.chooseGraphButton.addTarget(self, action: #selector(openGraphPicker), for: .touchUpInside)
         NSLayoutConstraint.activate([
-            chooseGraphButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
+            chooseGraphButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 150),
             chooseGraphButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             chooseGraphButton.heightAnchor.constraint(equalToConstant: 50),
             chooseGraphButton.widthAnchor.constraint(equalToConstant: 300),

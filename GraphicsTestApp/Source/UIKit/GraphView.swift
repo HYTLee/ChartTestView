@@ -36,8 +36,8 @@ public class GraphView: UIView {
         let minimalY = getMinimalYValue()
         var rangeBetweenXPoint: CGFloat = 60
         let numberOfXLabels = Int(widthOfChart / 120)
+        // Add buttons under graph
         self.addYLinesButtons(graphHeight: heightOfGraph)
-        
         // Draw x lines of graph
         self.drawStaticLines(chartPath: chartPath, rect: rect, heightOfChart: heightOfGraph, ySpacing: ySpacing)
         if isGraphLabelsVisible {
