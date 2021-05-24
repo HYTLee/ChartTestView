@@ -10,24 +10,32 @@ import UIKit
 import CoreGraphics
 
 public class GraphView: UIView {
-    var initialGraphData: GraphModel? {
+    
+    //MARK: Variables
+    var graphData: GraphModel? {
         didSet {
+            self.drawingGraphData = graphData
             self.updateUI()
         }
     }
-    var drawingGraphData: GraphModel?
+    
+    private var drawingGraphData: GraphModel?
+    
+    //MARK: Setting
     var graphLinesColor = UIColor.lightGray
     var textColor = UIColor.lightGray
     var linesWidth: CGFloat = 2
     var staticLinesWidth: CGFloat = 1
     var isGraphLabelsVisible: Bool = true
     
+    //MARK: Initializer
     public convenience init(graphData: GraphModel) {
         self.init(frame: CGRect.zero)
-        self.initialGraphData = graphData
-        self.drawingGraphData = initialGraphData
+        self.graphData = graphData
+        self.drawingGraphData = graphData
     }
 
+    //MARK: Drawing function
     public override func draw(_ rect: CGRect) {
         let chartPath = UIBezierPath()
         let heightOfGraph = rect.height - 75
@@ -36,18 +44,23 @@ public class GraphView: UIView {
         let minimalY = getMinimalYValue()
         var rangeBetweenXPoint: CGFloat = 60
         let numberOfXLabels = Int(widthOfChart / 120)
-        // Add buttons under graph
         self.addYLinesButtons(graphHeight: heightOfGraph)
-        // Draw x lines of graph
-        self.drawStaticLines(chartPath: chartPath, rect: rect, heightOfChart: heightOfGraph, ySpacing: ySpacing)
+        self.drawStaticLines(chartPath: chartPath, rect: rect,
+                             heightOfChart: heightOfGraph,
+                             ySpacing: ySpacing)
         if isGraphLabelsVisible {
-            self.setXLabelsWithData(chartPath: chartPath, numberOfXLabels: numberOfXLabels, rangeBetweenXPoint: &rangeBetweenXPoint)
+            self.setXLabelsWithData(chartPath: chartPath,
+                                    numberOfXLabels: numberOfXLabels,
+                                    rangeBetweenXPoint: &rangeBetweenXPoint)
         }
         chartPath.close()
         self.graphLinesColor.set()
         chartPath.lineWidth = staticLinesWidth
         chartPath.stroke()
-        self.drawGraphicLines(rect: rect, heightOfChart: heightOfGraph, minimalY: minimalY, ySpacing: ySpacing)
+        self.drawGraphicLines(rect: rect,
+                              heightOfChart: heightOfGraph,
+                              minimalY: minimalY,
+                              ySpacing: ySpacing)
     }
 }
 
@@ -97,7 +110,7 @@ private extension GraphView {
         let datePercentage = 100 / numberOfLabels
         for number in 1...numberOfLabels {
             guard let value = drawingGraphData?.dataSets[0].x[datePercentage * number] else { return ["Unknown"] }
-            let date = DateFormatter().convertDate(date: value, dateFormat: "MMM dd")
+            let date = value.formated(format: "MMM dd")
             xValues.append(date)
         }
         return xValues
@@ -162,12 +175,15 @@ private extension GraphView {
     
     func setXLabelsWithData(chartPath: UIBezierPath, numberOfXLabels: Int, rangeBetweenXPoint: inout CGFloat)  {
         let yPointForXLabels = chartPath.currentPoint.y
-        let xPointsForXLabels:[CGFloat] = setPointForXLabels(numberOfXLabels: numberOfXLabels, rangeBetweenXPoints: &rangeBetweenXPoint)
+        let xPointsForXLabels:[CGFloat] = setPointForXLabels(numberOfXLabels: numberOfXLabels,
+                                                             rangeBetweenXPoints: &rangeBetweenXPoint)
         let xPointsStrings = setValuesForXRows(numberOfLabels: xPointsForXLabels.count)
         var numberOFXPoint = 0
         for point in xPointsForXLabels {
-            let coordinatesForLabel = CGPoint(x: point, y: yPointForXLabels)
-            self.addXLabel(point: coordinatesForLabel, value: xPointsStrings[numberOFXPoint])
+            let coordinatesForLabel = CGPoint(x: point,
+                                              y: yPointForXLabels)
+            self.addXLabel(point: coordinatesForLabel,
+                           value: xPointsStrings[numberOFXPoint])
             numberOFXPoint += 1
         }
     }
@@ -218,21 +234,21 @@ private extension GraphView {
     }
     
     func addYLinesButtons(graphHeight: CGFloat)  {
-        let numberOfButtons = (initialGraphData?.dataSets.count ?? 2) - 1
+        let numberOfButtons = (graphData?.dataSets.count ?? 2) - 1
 
         for number in 0...numberOfButtons {
             let button = UIButton(frame: CGRect(x: CGFloat(number) * 50 , y: graphHeight + 35, width: 44, height: 44))
             
-            let lineName = initialGraphData?.dataSets[number].name
+            let lineName = graphData?.dataSets[number].name
             guard let isButtonEnabled = drawingGraphData?.dataSets.contains(where: { (dataSet) -> Bool in
                 dataSet.name == lineName
             }) else { return  }
             if isButtonEnabled {
-                button.setTitle("\(initialGraphData?.dataSets[number].name ?? "N/A")", for: .normal)
+                button.setTitle("\(graphData?.dataSets[number].name ?? "N/A")", for: .normal)
             } else {
                 button.setTitle("Off", for: .normal)
             }
-            button.setTitleColor(UIColor().hexStringToUIColor(hex: initialGraphData?.dataSets[number].color ?? "#d3d3d3"), for: .normal)
+            button.setTitleColor(UIColor().hexStringToUIColor(hex: graphData?.dataSets[number].color ?? "#d3d3d3"), for: .normal)
             button.tag = number
             button.addTarget(self, action: #selector(yLineButtonAction), for: .touchUpInside)
             self.addSubview(button)
@@ -243,15 +259,15 @@ private extension GraphView {
         if button.title(for: .normal) != "Off"{
             if drawingGraphData?.dataSets.count ?? 1 > 1 {
                 guard let indexOfLine = drawingGraphData?.dataSets.firstIndex(where: { (dataSet) -> Bool in
-                    dataSet.name == initialGraphData?.dataSets[button.tag].name
+                    dataSet.name == graphData?.dataSets[button.tag].name
                 }) else { return }
                 drawingGraphData?.dataSets.remove(at: indexOfLine)
             } else {
                 self.showAlertGraphCountViolation()
             }
         } else {
-            button.setTitle("\(initialGraphData?.dataSets[button.tag].name ?? "N/A")", for: .normal)
-            drawingGraphData?.dataSets.append((initialGraphData?.dataSets[button.tag])!)
+            button.setTitle("\(graphData?.dataSets[button.tag].name ?? "N/A")", for: .normal)
+            drawingGraphData?.dataSets.append((graphData?.dataSets[button.tag])!)
         }
         self.updateUI()
     }

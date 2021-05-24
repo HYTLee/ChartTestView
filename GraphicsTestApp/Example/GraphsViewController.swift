@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class GraphsViewController: UIViewController {
     let jsonDecoder = JsonDecodeManager()
     var decodedData: Responses?
     var chartData: GraphModel? {
@@ -46,8 +46,12 @@ class ViewController: UIViewController {
     func setChooseGraphButton()  {
         self.view.addSubview(chooseGraphButton)
         self.chooseGraphButton.translatesAutoresizingMaskIntoConstraints = false
-        self.chooseGraphButton.backgroundColor = .red
+        self.chooseGraphButton.backgroundColor = .clear
+        self.chooseGraphButton.layer.borderWidth = 2
+        self.chooseGraphButton.layer.borderColor = UIColor.red.cgColor
+        self.chooseGraphButton.layer.cornerRadius = 5
         self.chooseGraphButton.setTitle("Choose graph", for: .normal)
+        self.chooseGraphButton.setTitleColor(.black, for: .normal)
         self.chooseGraphButton.addTarget(self, action: #selector(openGraphPicker), for: .touchUpInside)
         NSLayoutConstraint.activate([
             chooseGraphButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 150),
@@ -63,9 +67,13 @@ class ViewController: UIViewController {
         self.okButton.frame = CGRect(x:  self.view.center.x - 50, y: 210, width: 100, height: 50)
         self.view.addSubview(picker)
         self.view.addSubview(okButton)
-        okButton.setTitle("Ok", for: .normal)
-        okButton.backgroundColor = .red
-        okButton.addTarget(self, action: #selector(reloadGraph), for: .touchUpInside)
+        self.okButton.setTitle("Ok", for: .normal)
+        self.okButton.layer.borderWidth = 2
+        self.okButton.layer.borderColor = UIColor.red.cgColor
+        self.okButton.layer.cornerRadius = 5
+        self.okButton.setTitleColor(.black, for: .normal)
+        self.okButton.backgroundColor = .white
+        self.okButton.addTarget(self, action: #selector(reloadGraph), for: .touchUpInside)
     }
     
     @objc private func reloadGraph() {
@@ -76,7 +84,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UIPickerViewDataSource {
+extension GraphsViewController: UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -86,7 +94,7 @@ extension ViewController: UIPickerViewDataSource {
     }
 }
 
-extension ViewController: UIPickerViewDelegate {
+extension GraphsViewController: UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return "\(row)"
