@@ -25,8 +25,6 @@ class GraphsViewController: UIViewController {
         decodedData = jsonDecoder.decodeJson()
         chartData = jsonDecoder.convertDataToChartModel(chartData: (decodedData?[0])!)
         self.setChooseGraphButton()
-        self.picker.dataSource = self
-        self.picker.delegate = self
     }
 
     
@@ -62,25 +60,21 @@ class GraphsViewController: UIViewController {
     }
     
     @objc private func openGraphPicker() {
-        self.chooseGraphButton.isHidden = true
-        self.picker.frame = CGRect(x: self.view.center.x - 100, y: 0, width: 200, height: 200)
-        self.okButton.frame = CGRect(x:  self.view.center.x - 50, y: 210, width: 100, height: 50)
-        self.view.addSubview(picker)
-        self.view.addSubview(okButton)
-        self.okButton.setTitle("Ok", for: .normal)
-        self.okButton.layer.borderWidth = 2
-        self.okButton.layer.borderColor = UIColor.red.cgColor
-        self.okButton.layer.cornerRadius = 5
-        self.okButton.setTitleColor(.black, for: .normal)
-        self.okButton.backgroundColor = .white
-        self.okButton.addTarget(self, action: #selector(reloadGraph), for: .touchUpInside)
+        let alert = UIAlertController(title: "Choose graph", message: "\n\n\n\n\n\n", preferredStyle: .alert)
+        picker.frame = CGRect(x: 5, y: 20, width: 250, height: 140)
+        alert.view.addSubview(picker)
+        picker.dataSource = self
+        picker.delegate = self
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+            self.reloadGraph()
+        }))
+        self.present(alert,animated: true, completion: nil )
     }
     
     @objc private func reloadGraph() {
         chartData = jsonDecoder.convertDataToChartModel(chartData: (decodedData?[self.picker.selectedRow(inComponent: 0)])!)
-        picker.removeFromSuperview()
-        okButton.removeFromSuperview()
-        self.chooseGraphButton.isHidden = false
     }
 }
 
