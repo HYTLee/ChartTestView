@@ -8,6 +8,10 @@
 import Foundation
 
 public struct GraphModel {
+    public init(dataSets: [DataSet]) {
+        self.dataSets = dataSets
+    }
+    
     var dataSets: [DataSet]
 }
 
