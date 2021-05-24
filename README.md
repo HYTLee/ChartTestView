@@ -11,7 +11,7 @@ public struct DataSet {
 }
 ```
 Number of x and y in arrays should be equal in each DataSet for one graph.
-# Add library to prject: 
+# Add library to project: 
 
 
 
