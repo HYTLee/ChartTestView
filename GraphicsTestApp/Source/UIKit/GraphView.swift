@@ -106,11 +106,14 @@ private extension GraphView {
                                  rect: CGRect,
                                  ySpacing: CGFloat) -> String {
         var allYValues: [Int] = []
-        let numberOfLines = (drawingGraphData?.dataSets.count ?? 1) - 1
+        guard let dataSetCount = drawingGraphData?.dataSets.count else { return "Error" }
+        let numberOfLines = dataSetCount - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
+            guard let dataSetYCount = drawingGraphData?.dataSets[y].y.count else { return "Error" }
+            let numberOfYPoints = dataSetYCount - 1
             for yPoint in 0...numberOfYPoints {
-                allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
+                guard let dataSetY = drawingGraphData?.dataSets[y].y[yPoint] else { return "Error" }
+                allYValues.append(dataSetY)
             }
         }
         let minimalY = allYValues.min() ?? 0
@@ -140,8 +143,8 @@ private extension GraphView{
     
     func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
         var allYValues: [Int] = []
-        
-        let numberOfLines = (drawingGraphData?.dataSets.count ?? 1) - 1
+        guard let dataSetsCount = drawingGraphData?.dataSets.count else {return 1}
+        let numberOfLines = dataSetsCount - 1
         for y in 0...numberOfLines {
             let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
@@ -281,10 +284,11 @@ private extension GraphView {
             }) else { return  }
             if isButtonEnabled {
                 button.setTitle("\(graphData?.dataSets[number].name ?? "N/A")", for: .normal)
+                button.setTitleColor(UIColor().hexStringToUIColor(hex: graphData?.dataSets[number].color ?? "#d3d3d3"), for: .normal)
             } else {
                 button.setTitle("Off", for: .normal)
+                button.setTitleColor(.gray, for: .normal)
             }
-            button.setTitleColor(UIColor().hexStringToUIColor(hex: graphData?.dataSets[number].color ?? "#d3d3d3"), for: .normal)
             button.tag = number
             button.addTarget(self, action: #selector(yLineButtonAction), for: .touchUpInside)
             self.addSubview(button)
