@@ -38,8 +38,8 @@ class GraphsViewController: UIViewController {
         NSLayoutConstraint.activate([
             testGraph.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
             testGraph.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 300),
-            testGraph.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 5),
-            testGraph.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -5)
+            testGraph.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+            testGraph.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0)
             ])
     }
     

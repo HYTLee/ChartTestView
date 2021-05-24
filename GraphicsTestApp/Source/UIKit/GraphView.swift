@@ -140,8 +140,8 @@ private extension GraphView {
     
     func getMinimalYValue() -> Int {
         var allYValues: [Int] = []
-        
-        let numberOfLines = (drawingGraphData?.dataSets.count ?? 1) - 1
+        guard let dataSetsCount = drawingGraphData?.dataSets.count else { return 0 }
+        let numberOfLines = dataSetsCount - 1
         for y in 0...numberOfLines {
             let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
             for yPoint in 0...numberOfYPoints {
@@ -164,7 +164,8 @@ private extension GraphView {
     }
     
     func setXSpacing(rect: CGRect) -> CGFloat {
-        let numberOfYPoints = (drawingGraphData?.dataSets[0].y.count ?? 2) - 1
+        guard let dataSetsYsCount = drawingGraphData?.dataSets[0].y.count else { return 1 }
+        let numberOfYPoints = dataSetsYsCount - 1
         let xSpacing = rect.width / CGFloat(numberOfYPoints)
         return xSpacing
     }
@@ -223,7 +224,8 @@ private extension GraphView {
             guard let initialY = yPoints?[0] else { return }
             let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
             linePath.move(to: CGPoint(x: xPointer, y: initialYCGPoint))
-            let numberOfYPoints = (yPoints?.count ?? 2) - 1
+            guard let yPointsCout = yPoints?.count else { return }
+            let numberOfYPoints = yPointsCout - 1
             if numberOfYPoints > 0 {
                 for yPoint in 1...numberOfYPoints {
                     xPointer += xSpaicing
@@ -241,8 +243,8 @@ private extension GraphView {
     }
     
     func addYLinesButtons(graphHeight: CGFloat)  {
-        let numberOfButtons = (graphData?.dataSets.count ?? 2) - 1
-
+        guard let dasetCount = graphData?.dataSets.count else { return }
+        let numberOfButtons = dasetCount - 1
         for number in 0...numberOfButtons {
             let button = UIButton(frame: CGRect(x: CGFloat(number) * 50 , y: graphHeight + 35, width: 44, height: 44))
             
@@ -264,7 +266,8 @@ private extension GraphView {
     
     @objc func yLineButtonAction(button: UIButton) {
         if button.title(for: .normal) != "Off"{
-            if drawingGraphData?.dataSets.count ?? 1 > 1 {
+            guard let dasetsCount = drawingGraphData?.dataSets.count  else { return }
+            if dasetsCount > 1 {
                 guard let indexOfLine = drawingGraphData?.dataSets.firstIndex(where: { (dataSet) -> Bool in
                     dataSet.name == graphData?.dataSets[button.tag].name
                 }) else { return }
