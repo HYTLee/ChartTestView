@@ -23,11 +23,16 @@ public class GraphView: UIView {
     let slider = TwoButtonsSlider()
     
     //MARK: Setting
-    var graphLinesColor = UIColor.lightGray
-    var textColor = UIColor.lightGray
-    var linesWidth: CGFloat = 2
-    var staticLinesWidth: CGFloat = 1
-    var isGraphLabelsVisible: Bool = true
+    public var graphLinesColor = UIColor.lightGray
+    public var textColor = UIColor.lightGray
+    public var linesWidth: CGFloat = 2
+    public var staticLinesWidth: CGFloat = 1
+    public var isYLabelsVisible: Bool = true
+    public var isXLabelsVisible: Bool = true
+    public var buttonsAreVisible: Bool = true
+    public var sliderIsVisible: Bool = true
+    public var yLabelFont: UIFont = UIFont.systemFont(ofSize: 16)
+    public var xLabelFont: UIFont = UIFont.systemFont(ofSize: 18)
 
     
     //MARK: Initializer
@@ -46,12 +51,16 @@ public class GraphView: UIView {
         let minimalY = getMinimalYValue()
         var rangeBetweenXPoint: CGFloat = 60
         let numberOfXLabels = Int(widthOfChart / 120)
-        self.addXLineSlider(graphHeight: heightOfGraph)
-        self.addYLinesButtons(graphHeight: heightOfGraph)
+        if sliderIsVisible {
+            self.addXLineSlider(graphHeight: heightOfGraph)
+        }
+        if buttonsAreVisible {
+            self.addYLinesButtons(graphHeight: heightOfGraph)
+        }
         self.drawStaticLines(chartPath: chartPath, rect: rect,
                              heightOfChart: heightOfGraph,
                              ySpacing: ySpacing)
-        if isGraphLabelsVisible {
+        if isXLabelsVisible {
             self.setXLabelsWithData(chartPath: chartPath,
                                     numberOfXLabels: numberOfXLabels,
                                     rangeBetweenXPoint: &rangeBetweenXPoint)
@@ -67,8 +76,9 @@ public class GraphView: UIView {
     }
 }
 
-//MARK: Private methods
+//MARK: Private methods for labels
 private extension GraphView {
+    
     func addYLabel(point: CGPoint, value: String) {
         let yLabel = UILabel(frame: CGRect(x: point.x + 5,
                                            y: point.y - 20,
@@ -76,6 +86,7 @@ private extension GraphView {
                                            height: 20))
         self.addSubview(yLabel)
         yLabel.textColor = textColor
+        yLabel.font = yLabelFont
         yLabel.text = value
     }
     
@@ -85,6 +96,7 @@ private extension GraphView {
                                            width: 100,
                                            height: 20))
         self.addSubview(xLabel)
+        xLabel.font = xLabelFont
         xLabel.textColor = textColor
         xLabel.text = value
     }
@@ -120,6 +132,11 @@ private extension GraphView {
         }
         return xValues
     }
+}
+
+
+//MARK: Prive methods for building graphics
+private extension GraphView{
     
     func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
         var allYValues: [Int] = []
@@ -152,17 +169,6 @@ private extension GraphView {
         return minimalY
     }
     
-    func removeAllSubview()  {
-        for view in self.subviews {
-            view.removeFromSuperview()
-        }
-    }
-    
-    func updateUI()  {
-        self.removeAllSubview()
-        self.setNeedsDisplay()
-    }
-    
     func setXSpacing(rect: CGRect) -> CGFloat {
         guard let dataSetsYsCount = drawingGraphData?.dataSets[0].y.count else { return 1 }
         let numberOfYPoints = dataSetsYsCount - 1
@@ -193,14 +199,32 @@ private extension GraphView {
             numberOFXPoint += 1
         }
     }
+}
+
+//MARK: Private methods for refreshing view
+private extension GraphView {
     
+    func removeAllSubview()  {
+        for view in self.subviews {
+            view.removeFromSuperview()
+        }
+    }
+    
+    func updateUI()  {
+        self.removeAllSubview()
+        self.setNeedsDisplay()
+    }
+}
+
+//MARK: Private methods for drawing graphics
+private extension GraphView {
     func drawStaticLines(chartPath: UIBezierPath, rect: CGRect, heightOfChart: CGFloat, ySpacing: CGFloat)  {
         var currentYLinePoint: CGFloat = 0
         var numberOfLine = 0
         while currentYLinePoint <= heightOfChart {
             chartPath.move(to: CGPoint(x:0,
                                        y:currentYLinePoint))
-            if numberOfLine != 0 && isGraphLabelsVisible{
+            if numberOfLine != 0 && isYLabelsVisible{
                 let yValue = setValueForYRow(currentPoint: chartPath.currentPoint,
                                              heightOfGraph: heightOfChart,
                                              rect: rect, ySpacing: ySpacing)
@@ -241,7 +265,10 @@ private extension GraphView {
             linePath.close()
          }
     }
-    
+}
+
+//MARK: Private methods for adding buttons
+private extension GraphView {
     func addYLinesButtons(graphHeight: CGFloat)  {
         guard let dasetCount = graphData?.dataSets.count else { return }
         let numberOfButtons = dasetCount - 1
@@ -282,14 +309,18 @@ private extension GraphView {
         self.updateUI()
     }
     
-    private func showAlertGraphCountViolation() {
+    func showAlertGraphCountViolation() {
         let alert = UIAlertController(title: "Error", message: "At least one graph should be presented", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
         alert.addAction(okAction)
         self.window?.rootViewController?.present(alert, animated: true, completion: nil)
     }
-    
-    private func addXLineSlider(graphHeight: CGFloat) {
+}
+
+//MARK: Private methods for adding slider
+private extension GraphView {
+
+    func addXLineSlider(graphHeight: CGFloat) {
         slider.frame = CGRect(x: 10 , y: graphHeight + 80, width: self.frame.width - 20, height: 35)
         self.addSubview(slider)
         slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: [.touchUpInside, .touchUpOutside])
@@ -314,6 +345,6 @@ private extension GraphView {
                         }
                     }
                 }
-                self.updateUI()
+            self.updateUI()
     }
 }
