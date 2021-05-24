@@ -29,7 +29,8 @@ class GraphsViewController: UIViewController {
 
     
     func setTestGraph()  {
-        let testGraph = GraphView(graphData: chartData!)
+        guard let chartData = self.chartData else { return }
+        let testGraph = GraphView(graphData: chartData)
         self.view.addSubview(testGraph)
         testGraph.backgroundColor = .white
         testGraph.translatesAutoresizingMaskIntoConstraints = false
