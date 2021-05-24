@@ -20,6 +20,7 @@ public class GraphView: UIView {
     }
     
     private var drawingGraphData: GraphModel?
+    let slider = TwoButtonsSlider()
     
     //MARK: Setting
     var graphLinesColor = UIColor.lightGray
@@ -27,6 +28,7 @@ public class GraphView: UIView {
     var linesWidth: CGFloat = 2
     var staticLinesWidth: CGFloat = 1
     var isGraphLabelsVisible: Bool = true
+
     
     //MARK: Initializer
     public convenience init(graphData: GraphModel) {
@@ -38,12 +40,13 @@ public class GraphView: UIView {
     //MARK: Drawing function
     public override func draw(_ rect: CGRect) {
         let chartPath = UIBezierPath()
-        let heightOfGraph = rect.height - 75
+        let heightOfGraph = rect.height - 100
         let widthOfChart = rect.width
         let ySpacing = getYSpacing(heightOfChart: heightOfGraph)
         let minimalY = getMinimalYValue()
         var rangeBetweenXPoint: CGFloat = 60
         let numberOfXLabels = Int(widthOfChart / 120)
+        self.addXLineSlider(graphHeight: heightOfGraph)
         self.addYLinesButtons(graphHeight: heightOfGraph)
         self.drawStaticLines(chartPath: chartPath, rect: rect,
                              heightOfChart: heightOfGraph,
@@ -105,11 +108,13 @@ private extension GraphView {
     }
     
     func setValuesForXRows(numberOfLabels: Int) -> [String] {
+        guard let numberOfXs = drawingGraphData?.dataSets[0].x.count else { return ["Error"]}
         var xValues: [String] = []
-        
         let datePercentage = 100 / numberOfLabels
         for number in 1...numberOfLabels {
-            guard let value = drawingGraphData?.dataSets[0].x[datePercentage * number] else { return ["Unknown"] }
+            let multiplier = Double(datePercentage * number) / 100
+            let xForLabel: Int = Int(multiplier * Double(numberOfXs))
+            guard let value = drawingGraphData?.dataSets[0].x[xForLabel] else { return ["Unknown"] }
             let date = value.formated(format: "MMM dd")
             xValues.append(date)
         }
@@ -148,7 +153,7 @@ private extension GraphView {
     }
     
     func removeAllSubview()  {
-        for view in self.subviews{
+        for view in self.subviews {
             view.removeFromSuperview()
         }
     }
@@ -219,15 +224,17 @@ private extension GraphView {
             let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
             linePath.move(to: CGPoint(x: xPointer, y: initialYCGPoint))
             let numberOfYPoints = (yPoints?.count ?? 2) - 1
-            for yPoint in 1...numberOfYPoints {
-                xPointer += xSpaicing
-                guard let currentY = yPoints?[yPoint] else { return }
-                let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
-                linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
-                let color = UIColor().hexStringToUIColor(hex: drawingGraphData?.dataSets[line].color ?? "#d3d3d3")
-                color.set()
-                linePath.lineWidth = linesWidth
-                linePath.stroke()
+            if numberOfYPoints > 0 {
+                for yPoint in 1...numberOfYPoints {
+                    xPointer += xSpaicing
+                    guard let currentY = yPoints?[yPoint] else { return }
+                    let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
+                    linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
+                    let color = UIColor().hexStringToUIColor(hex: drawingGraphData?.dataSets[line].color ?? "#d3d3d3")
+                    color.set()
+                    linePath.lineWidth = linesWidth
+                    linePath.stroke()
+                }
             }
             linePath.close()
          }
@@ -277,5 +284,33 @@ private extension GraphView {
         let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
         alert.addAction(okAction)
         self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
+    
+    private func addXLineSlider(graphHeight: CGFloat) {
+        slider.frame = CGRect(x: 10 , y: graphHeight + 80, width: self.frame.width - 20, height: 20)
+        self.addSubview(slider)
+        slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: [.touchUpInside, .touchUpOutside])
+    }
+    
+    @objc func onSliderValChanged(slider: TwoButtonsSlider, event: UIEvent) {
+        guard let numberOfXValues = graphData?.dataSets[0].x.count else { return }
+        guard let numberOfGraphs = drawingGraphData?.dataSets.count else { return }
+        let currentLowerValue = Int(slider.lowerValue * CGFloat(numberOfXValues - 1))
+        let currentUpperValue = Int(slider.upperValue * CGFloat(numberOfXValues - 1))
+                for number in 0...(numberOfGraphs - 1) {
+                    let graphName = drawingGraphData?.dataSets[number].name
+                    guard let numberOfDataSets = graphData?.dataSets.count else {return }
+                    for graph in 0...(numberOfDataSets - 1) {
+                        if graphData?.dataSets[graph].name == graphName {
+                            guard let newXRange = graphData?.dataSets[graph].x[currentLowerValue...currentUpperValue] else { return }
+                            let newXRangeArray = Array<Date>(newXRange)
+                            guard let newYRange = graphData?.dataSets[graph].y[currentLowerValue...currentUpperValue] else { return }
+                            let newYRangeArray = Array<Int>(newYRange)
+                            drawingGraphData?.dataSets[number].x = newXRangeArray
+                            drawingGraphData?.dataSets[number].y = newYRangeArray
+                        }
+                    }
+                }
+                self.updateUI()
     }
 }

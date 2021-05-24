@@ -27,6 +27,7 @@
 		807785CB265BACA8000833AC /* DataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807785CA265BACA8000833AC /* DataSet.swift */; };
 		80B6D3D32646EAD300152F7E /* InitialGraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D22646EAD300152F7E /* InitialGraphModel.swift */; };
 		80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */; };
+		80E885B3265C07C3009E084E /* TwoButtonsSliderTrackLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E885B2265C07C3009E084E /* TwoButtonsSliderTrackLayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		807785CA265BACA8000833AC /* DataSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSet.swift; sourceTree = "<group>"; };
 		80B6D3D22646EAD300152F7E /* InitialGraphModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialGraphModel.swift; sourceTree = "<group>"; };
 		80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extention.swift"; sourceTree = "<group>"; };
+		80E885B2265C07C3009E084E /* TwoButtonsSliderTrackLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonsSliderTrackLayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -204,6 +206,7 @@
 				8021ECC326445F0A0061C7FF /* GraphView.swift */,
 				80662054264D43C500947B3E /* UIColor+Extention.swift */,
 				805B14632656D88300663108 /* TwoButtonsSlider.swift */,
+				80E885B2265C07C3009E084E /* TwoButtonsSliderTrackLayer.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				80B6D3D32646EAD300152F7E /* InitialGraphModel.swift in Sources */,
 				8021ECB226445B620061C7FF /* Column.swift in Sources */,
 				80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */,
+				80E885B3265C07C3009E084E /* TwoButtonsSliderTrackLayer.swift in Sources */,
 				8021ECC426445F0A0061C7FF /* GraphView.swift in Sources */,
 				8021EC6C2641BC140061C7FF /* GraphicsTestApp.xcdatamodeld in Sources */,
 				805B14642656D88300663108 /* TwoButtonsSlider.swift in Sources */,
