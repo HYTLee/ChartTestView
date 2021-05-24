@@ -1,6 +1,6 @@
 # ChartTestView
 
-This library is created to help draw graphs
+This library is created to help draw graphs.
 Graph is drawing based on the model [DataSet] in which each DataSet is
 ```
 public struct DataSet {
@@ -10,7 +10,7 @@ public struct DataSet {
     var color: String
 }
 ```
-
+Number of x and y in arrays should be equal in each DataSet for one graph.
 # Add library to prject: 
 
 
