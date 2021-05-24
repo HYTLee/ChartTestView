@@ -68,7 +68,7 @@ class TwoButtonsSlider: UIControl {
       }
       
       
-      private let trackLayer = RangeSliderTrackLayer()
+      private let trackLayer = TwoButtonsSliderTrackLayer()
       private let lowerThumbImageView = UIImageView()
       private let upperThumbImageView = UIImageView()
       private var previousLocation = CGPoint()
@@ -96,7 +96,7 @@ class TwoButtonsSlider: UIControl {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
 
-        trackLayer.frame = bounds.insetBy(dx: 0.0, dy: bounds.height / 3)
+        trackLayer.frame = bounds.insetBy(dx: 0.0, dy: 0)
         trackLayer.setNeedsDisplay()
         lowerThumbImageView.frame = CGRect(origin: thumbOriginForValue(lowerValue),
                                            size: thumbImage!.size)
@@ -104,9 +104,11 @@ class TwoButtonsSlider: UIControl {
                                            size: thumbImage!.size)
         CATransaction.commit()
       }
+    
       func positionForValue(_ value: CGFloat) -> CGFloat {
         return bounds.width * value
       }
+    
       private func thumbOriginForValue(_ value: CGFloat) -> CGPoint {
         let x = positionForValue(value) - (thumbImage!.size.width) / 2.0
         return CGPoint(x: x, y: (bounds.height - thumbImage!.size.height) / 2.0)
@@ -128,10 +130,8 @@ class TwoButtonsSlider: UIControl {
       
       override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         let location = touch.location(in: self)
-        
         let deltaLocation = location.x - previousLocation.x
         let deltaValue = (maximumValue - minimumValue) * deltaLocation / bounds.width
-        
         previousLocation = location
         
         if lowerThumbImageView.isHighlighted {
@@ -143,7 +143,6 @@ class TwoButtonsSlider: UIControl {
           upperValue = boundValue(upperValue, toLowerValue: lowerValue,
                                   upperValue: maximumValue)
         }
-        
         sendActions(for: .valueChanged)
         return true
       }
