@@ -11,7 +11,7 @@ public struct GraphModel {
     public init(dataSets: [DataSet]) {
         self.dataSets = dataSets
     }
-    
-    var dataSets: [DataSet]
+
+    public var dataSets: [DataSet]
 }
 

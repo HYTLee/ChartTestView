@@ -15,8 +15,8 @@ public struct DataSet {
         self.color = color
     }
     
-    var x: [Date]
-    var y: [Int]
-    var name: String
-    var color: String
+    public  var x: [Date]
+    public var y: [Int]
+    public  var name: String
+    public  var color: String
 }
