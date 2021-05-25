@@ -19,7 +19,7 @@ class TwoButtonsSliderTrackLayer: CALayer {
         ctx.addPath(path.cgPath)
         ctx.setFillColor(slider.trackTintColor.cgColor)
         ctx.fillPath()
-        ctx.setFillColor(slider.trackHighlightTintColor.cgColor)
+        ctx.setFillColor(UIColor.clear.cgColor)
         let rect = CGRect(x: 0, y: 0,
                       width: bounds.width,
                       height: bounds.height)

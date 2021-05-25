@@ -163,8 +163,8 @@
 		8021ECA02641BEBE0061C7FF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				8021ECA12641BED60061C7FF /* chartData.json */,
 				8021EC6D2641BC150061C7FF /* Assets.xcassets */,
+				8021ECA12641BED60061C7FF /* chartData.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -203,10 +203,9 @@
 		80662053264D43B000947B3E /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				80E83C47265D025700C408A3 /* Slider */,
 				8021ECC326445F0A0061C7FF /* GraphView.swift */,
 				80662054264D43C500947B3E /* UIColor+Extention.swift */,
-				805B14632656D88300663108 /* TwoButtonsSlider.swift */,
-				80E885B2265C07C3009E084E /* TwoButtonsSliderTrackLayer.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -233,6 +232,7 @@
 		80B6D3D726484A7500152F7E /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				80E83C43265D020500C408A3 /* Resources */,
 				8021EC972641BC2E0061C7FF /* Models */,
 				80662053264D43B000947B3E /* UIKit */,
 			);
@@ -245,6 +245,22 @@
 				80662052264D43A600947B3E /* Foundations */,
 			);
 			path = Extentions;
+			sourceTree = "<group>";
+		};
+		80E83C43265D020500C408A3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		80E83C47265D025700C408A3 /* Slider */ = {
+			isa = PBXGroup;
+			children = (
+				80E885B2265C07C3009E084E /* TwoButtonsSliderTrackLayer.swift */,
+				805B14632656D88300663108 /* TwoButtonsSlider.swift */,
+			);
+			path = Slider;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
