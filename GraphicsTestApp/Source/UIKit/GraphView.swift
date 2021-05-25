@@ -47,12 +47,13 @@ public class GraphView: UIView {
         let chartPath = UIBezierPath()
         let heightOfGraph = rect.height - 120
         let widthOfChart = rect.width
-        let ySpacing = getYSpacing(heightOfChart: heightOfGraph)
-        let minimalY = getMinimalYValue()
+        let ySpacing = getYSpacing(heightOfChart: heightOfGraph, type: .dynamicData)
+        let minimalY = getMinimalYValue(type: .dynamicData)
         var rangeBetweenXPoint: CGFloat = 60
         let numberOfXLabels = Int(widthOfChart / 120)
         if sliderIsVisible {
             self.addXLineSlider(graphHeight: heightOfGraph)
+            self.drawGraphicLines(rect: CGRect(x: 0, y: heightOfGraph + 80, width: rect.width, height: 40), heightOfChart: heightOfGraph + 110, minimalY: getMinimalYValue(type: .staticData), ySpacing: getYSpacing(heightOfChart: 35, type: .staticData), type: .staticData)
         }
         if buttonsAreVisible {
             self.addYLinesButtons(graphHeight: heightOfGraph)
@@ -72,7 +73,13 @@ public class GraphView: UIView {
         self.drawGraphicLines(rect: rect,
                               heightOfChart: heightOfGraph,
                               minimalY: minimalY,
-                              ySpacing: ySpacing)
+                              ySpacing: ySpacing, type: .dynamicData)
+      
+    }
+    
+    enum TypeOfGraphic {
+        case staticData
+        case dynamicData
     }
 }
 
@@ -141,31 +148,66 @@ private extension GraphView {
 //MARK: Prive methods for building graphics
 private extension GraphView{
     
-    func getYSpacing(heightOfChart: CGFloat) -> CGFloat {
+    func getYSpacing(heightOfChart: CGFloat, type: TypeOfGraphic) -> CGFloat {
         var allYValues: [Int] = []
-        guard let dataSetsCount = drawingGraphData?.dataSets.count else {return 1}
-        let numberOfLines = dataSetsCount - 1
-        for y in 0...numberOfLines {
-            let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
-            for yPoint in 0...numberOfYPoints {
-                allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
+        let dataSetsCount: Int?
+        switch type {
+        case .dynamicData:
+            dataSetsCount = drawingGraphData?.dataSets.count
+            guard let guardDataSetsCount = dataSetsCount else {return 1}
+            let numberOfLines = guardDataSetsCount - 1
+            for y in 0...numberOfLines {
+                let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
+                for yPoint in 0...numberOfYPoints {
+                    allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
+                }
             }
+            let minimalY = allYValues.min() ?? 0
+            let maximalY = allYValues.max() ?? 1
+            let rangeOfYValues = maximalY - minimalY
+            let ySpacing = heightOfChart / CGFloat(rangeOfYValues)
+            return ySpacing
+        case .staticData:
+            dataSetsCount = graphData?.dataSets.count
+            guard let guardDataSetsCount = dataSetsCount else {return 1}
+            let numberOfLines = guardDataSetsCount - 1
+            for y in 0...numberOfLines {
+                let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
+                for yPoint in 0...numberOfYPoints {
+                    allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
+                }
+            }
+            let minimalY = allYValues.min() ?? 0
+            let maximalY = allYValues.max() ?? 1
+            let rangeOfYValues = maximalY - minimalY
+            let ySpacing = heightOfChart / CGFloat(rangeOfYValues)
+            return ySpacing
         }
-        let minimalY = allYValues.min() ?? 0
-        let maximalY = allYValues.max() ?? 1
-        let rangeOfYValues = maximalY - minimalY
-        let ySpacing = heightOfChart / CGFloat(rangeOfYValues)
-        return ySpacing
     }
     
-    func getMinimalYValue() -> Int {
+    func getMinimalYValue(type: TypeOfGraphic) -> Int {
         var allYValues: [Int] = []
-        guard let dataSetsCount = drawingGraphData?.dataSets.count else { return 0 }
-        let numberOfLines = dataSetsCount - 1
+        let dataSetCount: Int?
+        switch type {
+        case .dynamicData:
+            dataSetCount = drawingGraphData?.dataSets.count
+        case .staticData:
+            dataSetCount = graphData?.dataSets.count
+        }
+        guard let guardDataSetsCount = dataSetCount else { return 0 }
+        let numberOfLines = guardDataSetsCount - 1
         for y in 0...numberOfLines {
-            let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
-            for yPoint in 0...numberOfYPoints {
-                allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
+            switch type {
+            case .dynamicData:
+                let numberOfYPoints = (drawingGraphData?.dataSets[y].y.count ?? 1) - 1
+                for yPoint in 0...numberOfYPoints {
+                    allYValues.append(drawingGraphData?.dataSets[y].y[yPoint] ?? 0)
+                }
+            case .staticData:
+                let numberOfYPoints = (graphData?.dataSets[y].y.count ?? 1) - 1
+                for yPoint in 0...numberOfYPoints {
+                    allYValues.append(graphData?.dataSets[y].y[yPoint] ?? 0)
+                }
             }
         }
         let minimalY = allYValues.min() ?? 0
@@ -221,6 +263,7 @@ private extension GraphView {
 
 //MARK: Private methods for drawing graphics
 private extension GraphView {
+    
     func drawStaticLines(chartPath: UIBezierPath, rect: CGRect, heightOfChart: CGFloat, ySpacing: CGFloat)  {
         var currentYLinePoint: CGFloat = 0
         var numberOfLine = 0
@@ -241,12 +284,25 @@ private extension GraphView {
         }
     }
 
-    func drawGraphicLines(rect: CGRect, heightOfChart: CGFloat, minimalY: Int, ySpacing: CGFloat)  {
-        guard let numberOfGraphLines = drawingGraphData?.dataSets.count else { return }
+    func drawGraphicLines(rect: CGRect, heightOfChart: CGFloat, minimalY: Int, ySpacing: CGFloat, type: TypeOfGraphic)  {
+        var dataSetCount: Int?
+        switch type {
+        case .dynamicData:
+            dataSetCount = drawingGraphData?.dataSets.count
+        case .staticData:
+            dataSetCount = graphData?.dataSets.count
+        }
+        guard let numberOfGraphLines = dataSetCount else { return }
         let xSpaicing = setXSpacing(rect: rect)
         for line in 0...(numberOfGraphLines - 1) {
             let linePath = UIBezierPath()
-            let yPoints = drawingGraphData?.dataSets[line].y
+            let yPoints: [Int]?
+            switch type {
+            case .dynamicData:
+                yPoints = drawingGraphData?.dataSets[line].y
+            case .staticData:
+                yPoints  = graphData?.dataSets[line].y
+            }
             var xPointer: CGFloat = 0
             guard let initialY = yPoints?[0] else { return }
             let initialYCGPoint = heightOfChart - (CGFloat((initialY - minimalY)) * ySpacing)
@@ -259,8 +315,14 @@ private extension GraphView {
                     guard let currentY = yPoints?[yPoint] else { return }
                     let yCGPoint = heightOfChart - (CGFloat((currentY - minimalY)) * ySpacing)
                     linePath.addLine(to: CGPoint(x: xPointer, y: yCGPoint))
-                    let color = UIColor().hexStringToUIColor(hex: drawingGraphData?.dataSets[line].color ?? "#d3d3d3")
-                    color.set()
+                    let color: UIColor?
+                    switch type {
+                    case .dynamicData:
+                        color = UIColor().hexStringToUIColor(hex: drawingGraphData?.dataSets[line].color ?? "#d3d3d3")
+                    case .staticData:
+                        color = UIColor().hexStringToUIColor(hex: graphData?.dataSets[line].color ?? "#d3d3d3")
+                    }
+                    color?.set()
                     linePath.lineWidth = linesWidth
                     linePath.stroke()
                 }
@@ -352,3 +414,5 @@ private extension GraphView {
             self.updateUI()
     }
 }
+
+
