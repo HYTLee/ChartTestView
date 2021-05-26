@@ -214,9 +214,16 @@ private extension GraphView{
         return minimalY
     }
     
-    func setXSpacing(rect: CGRect) -> CGFloat {
-        guard let dataSetsYsCount = drawingGraphData?.dataSets[0].y.count else { return 1 }
-        let numberOfYPoints = dataSetsYsCount - 1
+    func setXSpacing(rect: CGRect, type: TypeOfGraphic) -> CGFloat {
+        let dataSetsYsCount: Int?
+        switch type {
+        case .dynamicData:
+            dataSetsYsCount = drawingGraphData?.dataSets[0].y.count
+        case .staticData:
+            dataSetsYsCount = graphData?.dataSets[0].y.count
+        }
+        guard let guardDataSetsYsCount = dataSetsYsCount else { return 1 }
+        let numberOfYPoints = guardDataSetsYsCount - 1
         let xSpacing = rect.width / CGFloat(numberOfYPoints)
         return xSpacing
     }
@@ -293,7 +300,7 @@ private extension GraphView {
             dataSetCount = graphData?.dataSets.count
         }
         guard let numberOfGraphLines = dataSetCount else { return }
-        let xSpaicing = setXSpacing(rect: rect)
+        let xSpaicing = setXSpacing(rect: rect, type: type)
         for line in 0...(numberOfGraphLines - 1) {
             let linePath = UIBezierPath()
             let yPoints: [Int]?
