@@ -39,8 +39,16 @@ class TwoButtonsSlider: UIControl {
         }
       }
       
-      var trackTintColor = UIColor(white: 0.9, alpha: 1)
-      var trackHighlightTintColor = UIColor(red: 0, green: 0.45, blue: 0.94, alpha: 1)
+    var trackTintColor = UIColor(white: 0.9, alpha: 1) {
+        didSet {
+            trackingLayer.setNeedsDisplay()
+        }
+    }
+    var trackHighlightTintColor = UIColor(red: 0, green: 0.45, blue: 0.94, alpha: 1) {
+        didSet {
+            trackingLayer.setNeedsDisplay()
+        }
+    }
       
       var thumbImage = UIImage(named: "Oval") {
         didSet {
@@ -58,7 +66,7 @@ class TwoButtonsSlider: UIControl {
         }
       }
       
-      
+      private let trackingLayer = SliderTrackLayer()
       private let lowerThumbImageView = UIImageView()
       private let upperThumbImageView = UIImageView()
       private var previousLocation = CGPoint()
@@ -66,6 +74,9 @@ class TwoButtonsSlider: UIControl {
       override init(frame: CGRect) {
         super.init(frame: frame)
         
+        trackingLayer.rangeSlider = self
+        trackingLayer.contentsScale = UIScreen.main.scale
+        layer.addSublayer(trackingLayer)
         
         lowerThumbImageView.image = thumbImage
         addSubview(lowerThumbImageView)
@@ -83,6 +94,8 @@ class TwoButtonsSlider: UIControl {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
 
+        trackingLayer.frame = bounds.insetBy(dx: 0.0, dy: bounds.height / 10)
+        trackingLayer.setNeedsDisplay()
 
         lowerThumbImageView.frame = CGRect(origin: thumbOriginForValue(lowerValue),
                                            size: thumbImage!.size)

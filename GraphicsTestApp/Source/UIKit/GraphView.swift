@@ -53,7 +53,7 @@ public class GraphView: UIView {
         let numberOfXLabels = Int(widthOfChart / 120)
         if sliderIsVisible {
             self.addXLineSlider(graphHeight: heightOfGraph)
-            self.drawGraphicLines(rect: CGRect(x: 0, y: heightOfGraph + 80, width: rect.width, height: 40), heightOfChart: heightOfGraph + 110, minimalY: getMinimalYValue(type: .staticData), ySpacing: getYSpacing(heightOfChart: 35, type: .staticData), type: .staticData)
+            self.drawGraphicLines(rect: CGRect(x: 0, y: heightOfGraph + 90, width: rect.width, height: 35), heightOfChart: heightOfGraph + 115, minimalY: getMinimalYValue(type: .staticData), ySpacing: getYSpacing(heightOfChart: 30, type: .staticData), type: .staticData)
         }
         if buttonsAreVisible {
             self.addYLinesButtons(graphHeight: heightOfGraph)
@@ -394,7 +394,7 @@ private extension GraphView {
 private extension GraphView {
 
     func addXLineSlider(graphHeight: CGFloat) {
-        slider.frame = CGRect(x: 10 , y: graphHeight + 80, width: self.frame.width - 20, height: 35)
+        slider.frame = CGRect(x:0 , y: graphHeight + 80, width: self.frame.width, height: 40)
         self.addSubview(slider)
         slider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: [.touchUpInside, .touchUpOutside])
     }

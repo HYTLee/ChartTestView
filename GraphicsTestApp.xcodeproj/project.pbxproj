@@ -25,6 +25,7 @@
 		805B14642656D88300663108 /* TwoButtonsSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805B14632656D88300663108 /* TwoButtonsSlider.swift */; };
 		80662055264D43C500947B3E /* UIColor+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80662054264D43C500947B3E /* UIColor+Extention.swift */; };
 		807785CB265BACA8000833AC /* DataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807785CA265BACA8000833AC /* DataSet.swift */; };
+		808E52B0265FAD5100FEB476 /* SliderTrackingLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808E52AF265FAD5100FEB476 /* SliderTrackingLayer.swift */; };
 		80B6D3D32646EAD300152F7E /* InitialGraphModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D22646EAD300152F7E /* InitialGraphModel.swift */; };
 		80B6D3D926484A9600152F7E /* DateFormatter+Extention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */; };
 /* End PBXBuildFile section */
@@ -71,6 +72,7 @@
 		805B14632656D88300663108 /* TwoButtonsSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoButtonsSlider.swift; sourceTree = "<group>"; };
 		80662054264D43C500947B3E /* UIColor+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extention.swift"; sourceTree = "<group>"; };
 		807785CA265BACA8000833AC /* DataSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSet.swift; sourceTree = "<group>"; };
+		808E52AF265FAD5100FEB476 /* SliderTrackingLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderTrackingLayer.swift; sourceTree = "<group>"; };
 		80B6D3D22646EAD300152F7E /* InitialGraphModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialGraphModel.swift; sourceTree = "<group>"; };
 		80B6D3D826484A9600152F7E /* DateFormatter+Extention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extention.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -256,6 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				805B14632656D88300663108 /* TwoButtonsSlider.swift */,
+				808E52AF265FAD5100FEB476 /* SliderTrackingLayer.swift */,
 			);
 			path = Slider;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 			files = (
 				80662055264D43C500947B3E /* UIColor+Extention.swift in Sources */,
 				8021ECAD26445B230061C7FF /* Settings.swift in Sources */,
+				808E52B0265FAD5100FEB476 /* SliderTrackingLayer.swift in Sources */,
 				8021EC662641BC140061C7FF /* GraphsViewController.swift in Sources */,
 				8021EC622641BC140061C7FF /* AppDelegate.swift in Sources */,
 				8021ECB926445CD60061C7FF /* JsonDecodeManager.swift in Sources */,
